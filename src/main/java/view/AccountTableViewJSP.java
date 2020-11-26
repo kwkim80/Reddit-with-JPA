@@ -20,7 +20,7 @@ import logic.LogicFactory;
  *
  * @author Shariar (Shawn) Emami
  */
-@WebServlet( name = "AccountTableJSP", urlPatterns = { "/AccountTableJSPExample" } )
+@WebServlet( name = "AccountTableJSP", urlPatterns = { "/AccountTableJSP" } )
 public class AccountTableViewJSP extends HttpServlet {
 
     private void fillTableData( HttpServletRequest req, HttpServletResponse resp )

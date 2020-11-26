@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package logic;
 
 import common.ValidationException;
@@ -36,7 +31,7 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
     public static final String REDDIT_ACCOUNT_ID = "reddit_account_id";
     public static final String SUBREDDIT_ID  = "subreddit_id";
 
-        public PostLogic() {
+        PostLogic() {
             super(new PostDAL());
         }
 
