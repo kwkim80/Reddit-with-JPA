@@ -49,7 +49,7 @@ public class PostTableView extends HttpServlet {
             //getColumnNames
              PostLogic logic = LogicFactory.getFor( "Post" );
             out.println( "<tr>" );
-            logic.getColumnNames().forEach(header -> {
+            logic.getColumnCodes().forEach(header -> {
                 out.println( "<th>"+header+"</th>" );
             });
             out.println( "</tr>" );
