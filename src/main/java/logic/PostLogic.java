@@ -131,13 +131,6 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
                         throw new ValidationException( ex );
                     }     
         }
-       
-         if( parameterMap.containsKey( REDDIT_ACCOUNT_ID ) ){
-               entity.setRedditAccountId(new RedditAccount(Integer.parseInt( parameterMap.get( REDDIT_ACCOUNT_ID )[ 0 ] )));     
-        }
-        if( parameterMap.containsKey( SUBREDDIT_ID ) ){
-               entity.setSubredditId(new Subreddit(Integer.parseInt( parameterMap.get( SUBREDDIT_ID )[ 0 ] )));     
-        }
 
         
        

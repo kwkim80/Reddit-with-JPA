@@ -1,6 +1,9 @@
 package view;
 
 
+import entity.Post;
+import entity.RedditAccount;
+import entity.Subreddit;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -13,8 +16,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import logic.AccountLogic;
 import logic.PostLogic;
 import logic.LogicFactory;
+import static logic.PostLogic.REDDIT_ACCOUNT_ID;
+import static logic.PostLogic.SUBREDDIT_ID;
+import logic.RedditAccountLogic;
+import logic.SubredditLogic;
 
 /**
  *
@@ -38,6 +46,7 @@ public class CreatePost extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType( "text/html;charset=UTF-8" );
         try( PrintWriter out = response.getWriter() ) {
+            PostLogic pLogic = LogicFactory.getFor( "Post" );
             /* TODO output your page here. You may use following sample code. */
             out.println( "<!DOCTYPE html>" );
             out.println( "<html>" );
@@ -48,13 +57,16 @@ public class CreatePost extends HttpServlet {
             out.println( "<div style=\"text-align: center;\">" );
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
             out.println( "<form method=\"post\">" );
-            out.println( "Title:<br>" );
-            //instead of typing the name of column manualy use the static vraiable in logic
-            //use the same name as column id of the table. will use this name to get date
-            //from parameter map.
-            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.TITLE );
-            out.println( "<br>" );
-          
+            pLogic.getColumnNames().forEach((var column) -> {
+                if(!column.equalsIgnoreCase("ID")){
+                out.printf( "%s:<br>",column.substring(0, 1).toUpperCase() + column.substring(1) );
+                out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", column );
+                out.println( "<br>" );  
+                }
+             
+            });
+           
+       
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
             out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );
             out.println( "</form>" );
@@ -122,27 +134,28 @@ public class CreatePost extends HttpServlet {
             throws ServletException, IOException {
         log( "POST" );
         log( "POST: Connection=" + connectionCount );
-        if( connectionCount < 3 ){
-            connectionCount++;
-            try {
-                TimeUnit.SECONDS.sleep( 60 );
-            } catch( InterruptedException ex ) {
-                Logger.getLogger( CreatePost.class.getName() ).log( Level.SEVERE, null, ex );
-            }
-        }
+
         PostLogic pLogic = LogicFactory.getFor( "Post" );
-//        String username = request.getParameter( PostLogic.USERNAME );
-//        if( pLogic.getPostWithUsername( username ) == null ){
-//            try {
-//                Post account = pLogic.createEntity( request.getParameterMap() );
-//                pLogic.add( account );
-//            } catch( Exception ex ) {
-//                errorMessage = ex.getMessage();
-//            }
-//        } else {
-//            //if duplicate print the error message
-//            errorMessage = "Username: \"" + username + "\" already exists";
-//        }
+        String unique_id = request.getParameter( PostLogic.UNIQUE_ID );
+        if( pLogic.getPostWithUniqueId(unique_id) == null ){
+            try {
+                Post post = pLogic.createEntity( request.getParameterMap() );
+                       
+                //create the two logics for reddit account and subreddit
+                //get the entities from logic using getWithId
+                //set the entities on your post object before adding them to db
+                RedditAccountLogic redditLogic=LogicFactory.getFor("RedditAccount");
+                SubredditLogic subLogic=LogicFactory.getFor("Subreddit");
+                post.setRedditAccountId(null);
+                post.setSubredditId(null);
+                pLogic.add( post );
+            } catch( Exception ex ) {
+                errorMessage = ex.getMessage();
+            }
+        } else {
+            //if duplicate print the error message
+            errorMessage = "UNIQUE_ID: \"" + unique_id + "\" already exists";
+        }
         if( request.getParameter( "add" ) != null ){
             //if add button is pressed return the same page
             processRequest( request, response );
