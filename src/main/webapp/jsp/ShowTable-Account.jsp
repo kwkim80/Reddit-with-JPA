@@ -1,7 +1,7 @@
 <%-- 
     Document   : ShowTable-Account
-    Created on : Jan 4, 2020
-    Author     : Shariar (Shawn) Emami
+    Created on : Dec 1, 2020
+    Author     : Jiyeon Choi
 --%>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
