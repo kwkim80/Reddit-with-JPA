@@ -5,47 +5,61 @@
  */
 package dal;
 
+import java.sql.ResultSet;
 import entity.Comment;
-import java.sql.Date;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  *
  * @author kw244
  */
-public class CommentDAL {
+public class CommentDAL extends GenericDAL<Comment>{
     public CommentDAL(){
-        
+        super(Comment.class);
     }
     public List<Comment> findAll(){
-            return null;
+            return findResults("Comment.findAll", null);
     }
     public Comment findById(int id){
-        return null;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        return findResult("Comment.findById", map);
     }
     
     public Comment findByUniqueId(String uniqueID){
-        return null;
-    }
+             HashMap<String, Object> map = new HashMap<>();
+        map.put("uniqueId", uniqueID);
+        return findResult("Comment.findByUniqueId", map);
     
+    }
     public List<Comment> findByText(String text){
-        return null;
+              HashMap<String, Object> map = new HashMap<>();
+        map.put("text", text);
+        return findResults("Comment.findByText", map);
     }
     
     public List<Comment> findByCreated(Date created){
-        return null;
+              HashMap<String, Object> map = new HashMap<>();
+        map.put("created", created);
+        return findResults("Comment.findByCreated", map);
     }
     
-        public List<Comment> findPoints(int points){
-        return null;
+        public List<Comment> findPoints(int  points){
+                  HashMap<String, Object> map = new HashMap<>();
+        map.put("points", points);
+        return findResults("Comment.findByPoints", map);
     }
             public List<Comment> findByReplys(int replys){
-        return null;
+             HashMap<String, Object> map = new HashMap<>();
+        map.put("replys", replys);
+        return findResults("Comment.findByReplys", map);
     }
                 public List<Comment> findByIsReply(boolean isReply){
-        return null;
+               HashMap<String, Object> map = new HashMap<>();
+        map.put("isReply", isReply);
+        return findResults("Comment.findByIsReply", map);
     }
                 
-    
-    
 }
