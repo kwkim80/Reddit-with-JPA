@@ -7,9 +7,7 @@ package logic;
 
 import common.ValidationException;
 import dal.CommentDAL;
-import entity.Account;
 import entity.Comment;
-import entity.Post;
 import entity.RedditAccount;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,12 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.ObjIntConsumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static logic.AccountLogic.DISPLAYNAME;
-import static logic.AccountLogic.ID;
-import static logic.AccountLogic.PASSWORD;
-import static logic.AccountLogic.USERNAME;
+
+
 
 
 public class CommentLogic extends GenericLogic<Comment, CommentDAL> {
@@ -102,43 +96,50 @@ public Comment createEntity(Map<String, String[]> parameterMap){
             }
         };
 
-        String reddit_account_id = parameterMap.get(REDDIT_ACCOUNT_ID )[ 0 ];
-        String post_id = parameterMap.get( POST_ID )[ 0 ];
+
         String unique_id = parameterMap.get( UNIQUE_ID )[ 0 ];
         String text = parameterMap.get( TEXT )[ 0 ];
-        String created = parameterMap.get( CREATED )[ 0 ];
-        String points = parameterMap.get(POINTS )[ 0 ];
-        String replys = parameterMap.get( REPLYS )[ 0 ];
-        String is_reply = parameterMap.get( IS_REPLY )[ 0 ];
 
-        if (isNumeric(reddit_account_id)!=true){
-            throw new ValidationException( "non numeric" );
+
+            
+                    if( parameterMap.containsKey( POINTS ) ){
+            try {
+                entity.setPoints( Integer.parseInt( parameterMap.get( POINTS )[ 0 ] ) );
+            } catch( java.lang.NumberFormatException ex ) {
+                throw new ValidationException( ex );
+            }
+        }        
+                                     if( parameterMap.containsKey( REPLYS ) ){
+            try {
+                entity.setReplys( Integer.parseInt( parameterMap.get( REPLYS )[ 0 ] ) );
+            } catch( java.lang.NumberFormatException ex ) {
+                throw new ValidationException( ex );
+            }
         }
-        if (isNumeric(post_id)!=true){
-            throw new ValidationException( "non numeric" );
-        }
+ 
         validator.accept( unique_id, 10 );
+              entity.setUniqueId(unique_id);
         validator.accept( text, 1000 );
+        entity.setText(text);
 
-        if (isNumeric(points)!=true){
-           throw new ValidationException( "non numeric" );
-        }
-            if (isNumeric(replys)!=true){
-           throw new ValidationException( "non numeric" );
-        }
-        validator.accept( is_reply, 1 );
 
-          RedditAccount reddId = new RedditAccount(Integer.valueOf(reddit_account_id));
-          Post postId = new Post(Integer.valueOf(post_id));
           
-        entity.setCreated(convertStringToDate(created));
-        
-        entity.setRedditAccountId(reddId);
-        entity.setPostId(postId );
-        entity.setUniqueId(unique_id);
-        entity.setPoints(Integer.valueOf(points));
-        entity.setReplys(Integer.valueOf(replys));
-        entity.setIsReply(Boolean.getBoolean(is_reply));
+        if( parameterMap.containsKey( CREATED ) ){
+                    try {
+                        entity.setCreated(new SimpleDateFormat("dd/MM/yyyy").parse(parameterMap.get( CREATED )[ 0 ] ));
+                    } catch (ParseException ex) {
+                        throw new ValidationException( ex );
+                    }     
+        }
+  
+        if( parameterMap.containsKey( IS_REPLY ) ){
+            try{
+            entity.setIsReply(Boolean.parseBoolean(parameterMap.get(IS_REPLY)[ 0 ]) );  
+            }
+            catch(Exception x){
+              throw new ValidationException( x );
+                    }
+        }
         
         
 
@@ -150,11 +151,11 @@ public List<String> getColumnNames(){
 }
 
 public List<String> getColumnCodes(){
-    return Arrays.asList(ID,REDDIT_ACCOUNT_ID,POST_ID,UNIQUE_ID,TEXT,CREATED,POINTS,IS_REPLY);
+    return Arrays.asList(ID,REDDIT_ACCOUNT_ID,POST_ID,UNIQUE_ID,TEXT,CREATED,POINTS,REPLYS,IS_REPLY);
 }
 
 public List<?> extractDataAsList(Comment c){
-    return Arrays.asList(c.getId(),c.getRedditAccountId(),c.getPostId(),c.getUniqueId(),c.getText(),c.getCreated(),c.getPoints(),c.getIsReply());
+    return Arrays.asList(c.getId(),c.getRedditAccountId(),c.getPostId(),c.getUniqueId(),c.getText(),c.getCreated(),c.getPoints(),c.getReplys(),c.getIsReply());
 }
 public static boolean isNumeric(String strNum) {
     if (strNum == null) {

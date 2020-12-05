@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logic.CommentLogic;
 import logic.LogicFactory;
+import logic.PostLogic;
 
 /**
  *
@@ -45,7 +46,7 @@ public class CommentTableView extends HttpServlet {
             out.println( "<!DOCTYPE html>" );
             out.println( "<html>" );
             out.println( "<head>" );
-            out.println( "<title>AccountViewNormal</title>" );
+            out.println( "<title>CommentViewNormal</title>" );
             out.println( "</head>" );
             out.println( "<body>" );
 
@@ -54,7 +55,7 @@ public class CommentTableView extends HttpServlet {
             //this is an example, for your other tables use getColumnNames from
             //logic to create headers in a loop.
             //getColumnNames
-             CommentLogic logic = LogicFactory.getFor( "Comment" );
+             CommentLogic logic = LogicFactory.getFor("Comment" );
             out.println( "<tr>" );
             logic.getColumnCodes().forEach(header -> {
                 out.println( "<th>"+header+"</th>" );
@@ -63,12 +64,12 @@ public class CommentTableView extends HttpServlet {
 
            
             List<Comment> entities = logic.getAll();
-            for( Comment e: entities ) {
+            entities.forEach(e -> {
                 //for other tables replace the code bellow with
                 //extractDataAsList in a loop to fill the data.
                 out.printf( "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
                         logic.extractDataAsList( e ).toArray() );
-            }
+            });
 
             out.println( "<tr>" );
             //this is an example, for your other tables use getColumnNames from
@@ -76,7 +77,7 @@ public class CommentTableView extends HttpServlet {
             logic.getColumnNames().forEach(columnName -> {
                 out.println( "<th>"+columnName+"</th>" );
             });
-          
+/*          
           out.println( "<th>ID</th>" );
             out.println( "<th>Reddit ID</th>" );
             out.println( "<th>Post ID</th>" );
@@ -85,7 +86,7 @@ public class CommentTableView extends HttpServlet {
             out.println( "<th>Date Created</th>" );   
             out.println( "<th>Points</th>" );
               out.println( "<th>Replys</th>" );
-                out.println( "<th>Is Reply</th>" );
+                out.println( "<th>Is Reply</th>" );*/
             out.println( "</tr>" );
             out.println( "</table>" );
             out.printf( "<div style=\"text-align: center;\"><pre>%s</pre></div>", toStringMap( request.getParameterMap() ) );
@@ -131,7 +132,7 @@ public class CommentTableView extends HttpServlet {
     @Override
     protected void doPost( HttpServletRequest request, HttpServletResponse response )
             throws ServletException, IOException {
-        log( "COMMENT" );
+        log( "POST" );
         CommentLogic logic = LogicFactory.getFor( "Comment" );
         Comment comment = logic.updateEntity( request.getParameterMap() );
         logic.update( comment );
@@ -145,7 +146,7 @@ public class CommentTableView extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Sample of Account View Normal";
+        return "Comment View Normal";
     }
 
     private static final boolean DEBUG = true;
