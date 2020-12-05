@@ -32,7 +32,7 @@ public final String UNIQUE_ID = "unique_id";
 public final String REDDIT_ACCOUNT_ID = "reddit_account_id";
 public final String POST_ID = "post_id";
 
-private  CommentLogic(){
+  CommentLogic(){
     super(new CommentDAL());
 }
 
