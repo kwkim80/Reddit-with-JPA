@@ -5,7 +5,7 @@
  */
 package dal;
 
-import java.sql.ResultSet;
+
 import entity.Comment;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,9 +28,9 @@ public class CommentDAL extends GenericDAL<Comment>{
         return findResult("Comment.findById", map);
     }
     
-    public Comment findByUniqueId(String uniqueID){
+    public Comment findByUniqueId(String uniqueId){
              HashMap<String, Object> map = new HashMap<>();
-        map.put("uniqueId", uniqueID);
+        map.put("unique_id", uniqueId);
         return findResult("Comment.findByUniqueId", map);
     
     }
@@ -58,7 +58,7 @@ public class CommentDAL extends GenericDAL<Comment>{
     }
                 public List<Comment> findByIsReply(boolean isReply){
                HashMap<String, Object> map = new HashMap<>();
-        map.put("isReply", isReply);
+        map.put("is_reply", isReply);
         return findResults("Comment.findByIsReply", map);
     }
                 
