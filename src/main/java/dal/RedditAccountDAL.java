@@ -7,13 +7,15 @@ package dal;
 
 import entity.RedditAccount;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author choi0118
  */
-public class RedditAccountDAL  extends GenericDAL<RedditAccount>  {
+public class RedditAccountDAL extends GenericDAL<RedditAccount>  {
 
 	public RedditAccountDAL() {
             super( RedditAccount.class );
@@ -21,32 +23,37 @@ public class RedditAccountDAL  extends GenericDAL<RedditAccount>  {
 	
         @Override
 	public List<RedditAccount> findAll() {
-            return null;
-			
+            return findResults( "RedditAccount.findAll",null);
 	}
 	
         @Override
 	public RedditAccount findById(int id) {
-		return null;
-		
+            Map<String, Object> map = new HashMap<>();
+            map.put( "id", id );
+            return findResult( "RedditAccount.findById", map );
 	}
 	
 	public RedditAccount findByName(String name) {
-		return null;
+            Map<String, Object> map = new HashMap<>();
+            map.put( "name", name );
+            return findResult( "RedditAccount.findByName", map );
 	}
 	
 	public List<RedditAccount> findByLinkPoints(int linkPoints) {
-            return null;
-		
+            Map<String, Object> map = new HashMap<>();
+            map.put( "linkPoints", linkPoints );
+            return findResults( "RedditAccount.findByLinkPoints", map );
 	}
 	
 	public List<RedditAccount> findByCommentPoints(int commentPoints) {
-            return null;
-		
+            Map<String, Object> map = new HashMap<>();
+            map.put( "commentPoints", commentPoints );
+            return findResults( "RedditAccount.findByCommentPoints", map );
 	}
 	
 	public List<RedditAccount> findByCreated(Date created){
-            return null;
-		
+            Map<String, Object> map = new HashMap<>();
+            map.put( "created", created );
+            return findResults( "RedditAccount.findByCreated", map );
 	}
 }
