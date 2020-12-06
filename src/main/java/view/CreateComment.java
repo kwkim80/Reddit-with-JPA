@@ -37,7 +37,7 @@ public class CreateComment extends HttpServlet {
             out.println( "<!DOCTYPE html>" );
             out.println( "<html>" );
             out.println( "<head>" );
-            out.println( "<title>Create Account</title>" );
+            out.println( "<title>Create Comment</title>" );
             out.println( "</head>" );
             out.println( "<body>" );
             out.println( "<div style=\"text-align: center;\">" );
