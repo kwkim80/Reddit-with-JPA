@@ -11,6 +11,7 @@ import entity.RedditAccount;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -139,5 +140,20 @@ public static final String ID = "id";
     public RedditAccount getWithId(int id) {
         return get( () -> dal().findById(id) );
     }
+    public RedditAccount getRedditAccountWithName(String name ) {
+        return get (() -> dal().findByName(name));
+    }
+
+    public List<RedditAccount> getRedditAccountsWithLinkPoints(int linkPoints ){
+        return get( () -> dal().findByLinkPoints(linkPoints));
+    } 
     
+    public List<RedditAccount> getRedditAccountsWithCommentPoints(int commentPoints){
+        return get( () -> dal().findByCommentPoints(commentPoints));
+    } 
+    
+    public List<RedditAccount> getRedditAccountsWithCreated(Date created ){
+         return get( () -> dal().findByCreated(created));
+    }
+   
 }
