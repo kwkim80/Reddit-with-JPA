@@ -31,17 +31,7 @@ public static final String ID = "id";
     RedditAccountLogic() {
         super(new RedditAccountDAL());
     }
-//~RedditAccountLogic()
-//+getAll() : List<RedditAccount>
-//+getWithId(id : int) : RedditAccount
-//+getRedditAccountWithName(name : String) : RedditAccount
-//+getRedditAccountsWithLinkPoints(linkPoints : int) : List<RedditAccount>
-//+getRedditAccountsWithCommentPoints(commentPoints : int) : List<RedditAccount>
-//+getRedditAccountsWithCreated(created : Date) : List<RedditAccount>
-//+createEntity(parameterMap : Map<String, String[]>) : RedditAccount
-//+getColumnNames() : List<String>
-//+getColumnCodes() : List<String>
-//+extractDataAsList(e : RedditAccount) : List<?>
+
     @Override
     public List<String> getColumnNames() {
         return Arrays.asList( "id", "name", "link_points", "comment_points","created");
