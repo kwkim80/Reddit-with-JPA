@@ -16,7 +16,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import logic.AccountLogic;
 import logic.PostLogic;
 import logic.LogicFactory;
 import static logic.PostLogic.REDDIT_ACCOUNT_ID;
@@ -46,7 +45,7 @@ public class CreatePost extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType( "text/html;charset=UTF-8" );
         try( PrintWriter out = response.getWriter() ) {
-            PostLogic pLogic = LogicFactory.getFor( "Post" );
+            PostLogic logic = LogicFactory.getFor( "Post" );
             /* TODO output your page here. You may use following sample code. */
             out.println( "<!DOCTYPE html>" );
             out.println( "<html>" );
@@ -57,7 +56,7 @@ public class CreatePost extends HttpServlet {
             out.println( "<div style=\"text-align: center;\">" );
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
             out.println( "<form method=\"post\">" );
-            pLogic.getColumnNames().forEach((var column) -> {
+            logic.getColumnNames().forEach((var column) -> {
                 if(!column.equalsIgnoreCase("ID")){
                 out.printf( "%s:<br>",column.substring(0, 1).toUpperCase() + column.substring(1) );
                 out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", column );
@@ -76,6 +75,8 @@ public class CreatePost extends HttpServlet {
                 out.println( errorMessage );
                 out.println( "</font>" );
                 out.println( "</p>" );
+                errorMessage="";
+               
             }
             out.println( "<pre>" );
             out.println( "Submitted keys and values:" );
@@ -135,20 +136,24 @@ public class CreatePost extends HttpServlet {
         log( "POST" );
         log( "POST: Connection=" + connectionCount );
 
-        PostLogic pLogic = LogicFactory.getFor( "Post" );
+      
         String unique_id = request.getParameter( PostLogic.UNIQUE_ID );
-        if( pLogic.getPostWithUniqueId(unique_id) == null ){
+        PostLogic logic=LogicFactory.getFor( "Post" );
+        Post temp=logic.getPostWithUniqueId(unique_id);
+        if(  temp== null ){
             try {
-                Post post = pLogic.createEntity( request.getParameterMap() );
+                Post post = logic.createEntity( request.getParameterMap() );
                        
                 //create the two logics for reddit account and subreddit
                 //get the entities from logic using getWithId
                 //set the entities on your post object before adding them to db
                 RedditAccountLogic redditLogic=LogicFactory.getFor("RedditAccount");
                 SubredditLogic subLogic=LogicFactory.getFor("Subreddit");
-                post.setRedditAccountId(null);
-                post.setSubredditId(null);
-                pLogic.add( post );
+                RedditAccount reddit = redditLogic.getWithId(Integer.valueOf(request.getParameter(PostLogic.REDDIT_ACCOUNT_ID)));
+                Subreddit sub = subLogic.getWithId(Integer.valueOf(request.getParameter(PostLogic.SUBREDDIT_ID)));
+                post.setRedditAccountId(reddit );
+                post.setSubredditId(sub);
+                logic.add( post );
             } catch( Exception ex ) {
                 errorMessage = ex.getMessage();
             }

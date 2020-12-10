@@ -24,10 +24,10 @@ public class TestRunReddit {
      */
     private static void exampleForReadingComemnts() throws IOException {
         //TODO fill in your reddit infromation here
-        String clientID = "HDp4fFJ2Eqxakg";
-        String clientSecret = "l6OLKT-qYcJc9AzKlivs_2slt_rbCQ";
-        String redditUser = "explicitcorp";
-        String algonquinUser = "obri0056";
+        String clientID = "oIA7yTgEh7NmeA";
+        String clientSecret = "lVhwxbIeZ6vZOhNm1sOCTo79bfk";
+        String redditUser = "kw2446";
+        String algonquinUser = "kim00395";
 
         DeveloperAccount dev = new DeveloperAccount()
                 .setClientID( clientID )

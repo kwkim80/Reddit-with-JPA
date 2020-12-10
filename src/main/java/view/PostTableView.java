@@ -38,7 +38,7 @@ public class PostTableView extends HttpServlet {
             out.println( "<!DOCTYPE html>" );
             out.println( "<html>" );
             out.println( "<head>" );
-            out.println( "<title>AccountViewNormal</title>" );
+            out.println( "<title>PostViewNormal</title>" );
             out.println( "</head>" );
             out.println( "<body>" );
 
@@ -50,7 +50,7 @@ public class PostTableView extends HttpServlet {
              PostLogic logic = LogicFactory.getFor( "Post" );
             out.println( "<tr>" );
             logic.getColumnCodes().forEach(header -> {
-                out.println( "<th>"+header+"</th>" );
+                out.printf( "<th>%s</th>", header.substring(0, 1).toUpperCase() + header.substring(1) );
             });
             out.println( "</tr>" );
 
@@ -67,7 +67,7 @@ public class PostTableView extends HttpServlet {
             //this is an example, for your other tables use getColumnNames from
             //logic to create headers in a loop.
             logic.getColumnNames().forEach(columnName -> {
-                out.println( "<th>"+columnName+"</th>" );
+                 out.printf( "<th>%s</th>", columnName.substring(0, 1).toUpperCase() + columnName.substring(1) );
             });
           
 //            out.println( "<th>Displayname</th>" );

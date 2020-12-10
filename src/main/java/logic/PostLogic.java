@@ -1,5 +1,6 @@
 package logic;
 
+import common.Utility;
 import common.ValidationException;
 import dal.PostDAL;
 import entity.Post;
@@ -7,12 +8,16 @@ import entity.RedditAccount;
 import entity.Subreddit;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.ObjIntConsumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -126,13 +131,13 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
         String unique_id = parameterMap.get( UNIQUE_ID )[ 0 ];
         if( parameterMap.containsKey( CREATED ) ){
                     try {
-                        entity.setCreated(new SimpleDateFormat("dd/MM/yyyy").parse(parameterMap.get( CREATED )[ 0 ] ));
+                        entity.setCreated(new SimpleDateFormat("yyyyMMdd").parse(parameterMap.get( CREATED )[ 0 ] ));
                     } catch (ParseException ex) {
-                        throw new ValidationException( ex );
+                        entity.setCreated(Date.from( Instant.now( Clock.systemDefaultZone())));
                     }     
         }
-
-        
+       
+     
        
         validator.accept( title, 45 );
         validator.accept( unique_id, 45 );
@@ -162,7 +167,7 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
     
     @Override
     public List<?> extractDataAsList(Post e) {
-        return Arrays.asList( e.getId(), e.getTitle(), e.getUniqueID(), e.getRedditAccountId(), e.getSubredditId(), e.getCommentCount(), e.getPoints(), e.getCreated() );   
+        return Arrays.asList( e.getId(), e.getTitle(), e.getUniqueID(), e.getRedditAccountId().getName(), e.getSubredditId().getName(), e.getCommentCount(), e.getPoints(), e.getCreated() );   
     }
 
     @Override

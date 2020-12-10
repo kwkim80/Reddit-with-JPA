@@ -5,10 +5,132 @@
  */
 package logic;
 
+import common.ValidationException;
+import dal.SubredditDAL;
+import entity.Subreddit;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.ObjIntConsumer;
+
 /**
  *
- * @author kw244
+ * @author choi0118
  */
-public class SubredditLogic {
+public class SubredditLogic extends GenericLogic <Subreddit, SubredditDAL>{
+    public static final String ID ="id"  ;
+    public static final String NAME  = "name";
+    public static final String URL  = "url";
+    public static final String SUBSCRIBERS  = "subscribers";
+
+
+
+
+    SubredditLogic() {
+        super(new SubredditDAL());
+    }
+
+     @Override
+    public List<Subreddit> getAll() {
+        return get( () -> dal().findAll() ); 
+    }
+
+    @Override
+    public Subreddit getWithId(int id) {
+        return get( () -> dal().findById(id) );
+    }
+    public Subreddit getSubredditWithName(String name ) {
+        return get (() -> dal().findByName(name));
+    }
+
+    public Subreddit getSubredditsWithUrl(String url ){
+        return get( () -> dal().findByUrl(url));
+    } 
     
+    public List<Subreddit> getSubredditsWithSubscribers(int subscribers){
+        return get( () -> dal().findBySubscribers(subscribers));
+    } 
+    
+    
+  
+    @Override
+    public Subreddit createEntity(Map<String, String[]> parameterMap) {
+        Objects.requireNonNull( parameterMap, "parameterMap cannot be null" );
+        //same as if condition below
+//        if (parameterMap == null) {
+//            throw new NullPointerException("parameterMap cannot be null");
+//        }
+
+        //create a new Entity object
+        Subreddit entity = new Subreddit();
+
+               //before using the values in the map, make sure to do error checking.
+        //simple lambda to validate a string, this can also be place in another
+        //method to be shared amoung all logic classes.
+        ObjIntConsumer< String> validator = ( value, length ) -> {
+            if( value == null || value.trim().isEmpty() || value.length() > length ){
+                String error = "";
+                if( value == null || value.trim().isEmpty() ){
+                    error = "value cannot be null or empty: " + value;
+                }
+                if( value.length() > length ){
+                    error = "string length is " + value.length() + " > " + length;
+                }
+                throw new ValidationException( error );
+            }
+        };
+        //ID is generated, so if it exists add it to the entity object
+        //otherwise it does not matter as mysql will create an if for it.
+        //the only time that we will have id is for update behaviour.
+       if( parameterMap.containsKey( ID ) ){
+                try {
+                    entity.setId( Integer.parseInt( parameterMap.get( ID )[ 0 ] ) );
+                } catch( java.lang.NumberFormatException ex ) {
+                    throw new ValidationException( ex );
+                }
+        }
+        if( parameterMap.containsKey( NAME ) ){
+                try {
+                    entity.setName(parameterMap.get( NAME )[ 0 ] );
+                } catch( java.lang.NumberFormatException ex ) {
+                    throw new ValidationException( ex );
+                }
+        }
+        
+        if( parameterMap.containsKey( URL ) ){
+                try {
+                    entity.setUrl(parameterMap.get( URL )[ 0 ] );
+                } catch( java.lang.NumberFormatException ex ) {
+                    throw new ValidationException( ex );
+                }
+        }
+        if( parameterMap.containsKey( SUBSCRIBERS ) ){
+                try {
+                    entity.setSubscribers(Integer.parseInt( parameterMap.get( SUBSCRIBERS )[ 0 ] ) );
+                } catch( java.lang.NumberFormatException ex ) {
+                    throw new ValidationException( ex );
+                }
+        }   
+
+     
+        return entity;        }
+
+   
+   
+     @Override
+    public List<String> getColumnNames() {
+        return Arrays.asList( ID, NAME, URL, SUBSCRIBERS);
+    }
+
+    @Override
+    public List<String> getColumnCodes() {
+        return Arrays.asList( "id", "name", "url", "subscribers");
+    }
+
+    @Override
+    public List<?> extractDataAsList(Subreddit e) {
+        return Arrays.asList( e.getId(), e.getName(), e.getUrl(), e.getSubscribers());   
+    }
+
 }
