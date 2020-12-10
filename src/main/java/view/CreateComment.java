@@ -48,7 +48,7 @@ public class CreateComment extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType( "text/html;charset=UTF-8" );
         try( PrintWriter out = response.getWriter() ) {
-            CommentLogic pLogic = LogicFactory.getFor( "Comment" );
+            CommentLogic cLogic = LogicFactory.getFor( "Comment" );
             /* TODO output your page here. You may use following sample code. */
             out.println( "<!DOCTYPE html>" );
             out.println( "<html>" );
@@ -59,7 +59,7 @@ public class CreateComment extends HttpServlet {
             out.println( "<div style=\"text-align: center;\">" );
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
             out.println( "<form method=\"post\">" );
-            pLogic.getColumnNames().forEach((var column) -> {
+            cLogic.getColumnNames().forEach((var column) -> {
                 if(!column.equalsIgnoreCase("ID")){
                 out.printf( "%s:<br>",column.substring(0, 1).toUpperCase() + column.substring(1) );
                 out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", column );
@@ -137,21 +137,21 @@ public class CreateComment extends HttpServlet {
         log( "POST" );
         log( "POST: Connection=" + connectionCount );
 
-        CommentLogic pLogic = LogicFactory.getFor( "Comment" );
+        CommentLogic cLogic = LogicFactory.getFor( "Comment" );
         String unique_id = request.getParameter( PostLogic.UNIQUE_ID );
-        if( pLogic.getCommentWithUniqueId(unique_id) == null ){
+        if( cLogic.getCommentWithUniqueId(unique_id) == null ){
             try {
-                Comment comment = pLogic.createEntity( request.getParameterMap() );
+                Comment comment = cLogic.createEntity( request.getParameterMap() );
                        
                 //create the two logics for reddit account and subreddit
                 //get the entities from logic using getWithId
                 //set the entities on your post object before adding them to db
                 RedditAccountLogic redditLogic=LogicFactory.getFor("RedditAccount");
-                SubredditLogic subLogic=LogicFactory.getFor("Subreddit");
+            //    SubredditLogic subLogic=LogicFactory.getFor("Subreddit");
        
                 comment.setRedditAccountId(null);
-                comment.setsetSubredditId(null);
-                pLogic.add( comment );
+       //         comment.setsetSubredditId(null);
+                cLogic.add( comment );
             } catch( Exception ex ) {
                 errorMessage = ex.getMessage();
             }

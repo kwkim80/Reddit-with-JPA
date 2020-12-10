@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.ObjIntConsumer;
 
-
 /**
  *
  * @author kw244
@@ -31,9 +30,9 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
     public static final String REDDIT_ACCOUNT_ID = "reddit_account_id";
     public static final String SUBREDDIT_ID  = "subreddi    t_id";
 
-        PostLogic() {
-            super(new PostDAL());
-        }
+    PostLogic() {
+        super(new PostDAL());
+                 }
 
     @Override
     public List<Post> getAll(){
