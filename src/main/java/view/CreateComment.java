@@ -1,6 +1,10 @@
 package view;
 
+
 import entity.Comment;
+import entity.Post;
+import entity.RedditAccount;
+import entity.Subreddit;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -13,12 +17,23 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import logic.AccountLogic;
 import logic.CommentLogic;
+import logic.PostLogic;
 import logic.LogicFactory;
+import static logic.PostLogic.REDDIT_ACCOUNT_ID;
+import static logic.PostLogic.SUBREDDIT_ID;
+import logic.RedditAccountLogic;
+import logic.SubredditLogic;
 
+/**
+ *
+ * @author kw244
+ */
 @WebServlet( name = "CreateComment", urlPatterns = { "/CreateComment" } )
 public class CreateComment extends HttpServlet {
-   private String errorMessage = null;
+
+    private String errorMessage = null;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -33,28 +48,27 @@ public class CreateComment extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType( "text/html;charset=UTF-8" );
         try( PrintWriter out = response.getWriter() ) {
+            CommentLogic cLogic = LogicFactory.getFor( "Comment" );
             /* TODO output your page here. You may use following sample code. */
             out.println( "<!DOCTYPE html>" );
             out.println( "<html>" );
             out.println( "<head>" );
-            out.println( "<title>Create Account</title>" );
+            out.println( "<title>Create Comment</title>" );
             out.println( "</head>" );
             out.println( "<body>" );
             out.println( "<div style=\"text-align: center;\">" );
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
             out.println( "<form method=\"post\">" );
-            out.println( "Displayname:<br>" );
-            //instead of typing the name of column manualy use the static vraiable in logic
-            //use the same name as column id of the table. will use this name to get date
-            //from parameter map.
-//            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", Comment.DISPLAYNAME );
-//            out.println( "<br>" );
-//            out.println( "User:<br>" );
-//            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", Comment.USERNAME );
-//            out.println( "<br>" );
-//            out.println( "Password:<br>" );
-//            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", Comment.PASSWORD );
-            out.println( "<br>" );
+            cLogic.getColumnNames().forEach((var column) -> {
+                if(!column.equalsIgnoreCase("ID")){
+                out.printf( "%s:<br>",column.substring(0, 1).toUpperCase() + column.substring(1) );
+                out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", column );
+                out.println( "<br>" );  
+                }
+             
+            });
+           
+       
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
             out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );
             out.println( "</form>" );
@@ -122,33 +136,35 @@ public class CreateComment extends HttpServlet {
             throws ServletException, IOException {
         log( "POST" );
         log( "POST: Connection=" + connectionCount );
-        if( connectionCount < 3 ){
-            connectionCount++;
+
+        CommentLogic cLogic = LogicFactory.getFor( "Comment" );
+        String unique_id = request.getParameter( PostLogic.UNIQUE_ID );
+        if( cLogic.getCommentWithUniqueId(unique_id) == null ){
             try {
-                TimeUnit.SECONDS.sleep( 60 );
-            } catch( InterruptedException ex ) {
-                Logger.getLogger( CreateAccount.class.getName() ).log( Level.SEVERE, null, ex );
+                Comment comment = cLogic.createEntity( request.getParameterMap() );
+                       
+                //create the two logics for reddit account and subreddit
+                //get the entities from logic using getWithId
+                //set the entities on your post object before adding them to db
+                RedditAccountLogic redditLogic=LogicFactory.getFor("RedditAccount");
+            //    SubredditLogic subLogic=LogicFactory.getFor("Subreddit");
+       
+                comment.setRedditAccountId(null);
+       //         comment.setsetSubredditId(null);
+                cLogic.add( comment );
+            } catch( Exception ex ) {
+                errorMessage = ex.getMessage();
             }
+        } else {
+            //if duplicate print the error message
+            errorMessage = "UNIQUE_ID: \"" + unique_id + "\" already exists";
         }
-        Comment aLogic = LogicFactory.getFor( "Comment" );
-       // String username = request.getParameter( Comment.USERNAME );
-//        if( aLogic.getAccountWithUsername( username ) == null ){
-//            try {
-//                Account account = aLogic.createEntity( request.getParameterMap() );
-//                aLogic.add( account );
-//            } catch( Exception ex ) {
-//                errorMessage = ex.getMessage();
-//            }
-//        } else {
-//            //if duplicate print the error message
-//            errorMessage = "Username: \"" + username + "\" already exists";
-//        }
         if( request.getParameter( "add" ) != null ){
             //if add button is pressed return the same page
             processRequest( request, response );
         } else if( request.getParameter( "view" ) != null ){
             //if view button is pressed redirect to the appropriate table
-            response.sendRedirect( "AccountTable" );
+            response.sendRedirect( "PostTable" );
         }
     }
 
@@ -159,7 +175,7 @@ public class CreateComment extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Create a Account Entity";
+        return "Create a Post Entity";
     }
 
     private static final boolean DEBUG = true;
@@ -175,5 +191,4 @@ public class CreateComment extends HttpServlet {
         String message = String.format( "[%s] %s", getClass().getSimpleName(), msg );
         getServletContext().log( message, t );
     }
-  
 }
