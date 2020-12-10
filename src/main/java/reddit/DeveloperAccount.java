@@ -7,10 +7,10 @@ import java.util.Objects;
  * 
  * <pre>
    DeveloperAccount dev = new DeveloperAccount()
-                .setClientID(clientID)
-                .setClientSecret(clientSecret)
-                .setRedditUser(redditUser)
-                .setAlgonquinUser(algonquinUser);
+                .setClientID(HDp4fFJ2Eqxakg)
+                .setClientSecret(l6OLKT-qYcJc9AzKlivs_2slt_rbCQ)
+                .setRedditUser(explicitcorp)
+                .setAlgonquinUser(obri0056);
  * </pre>
  * 
  * @author Shariar (Shawn) Emami
