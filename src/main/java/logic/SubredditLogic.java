@@ -8,11 +8,19 @@ package logic;
 import common.ValidationException;
 import dal.SubredditDAL;
 import entity.Subreddit;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.ObjIntConsumer;
+import static logic.PostLogic.CREATED;
+import static logic.PostLogic.TITLE;
+import static logic.PostLogic.UNIQUE_ID;
 
 /**
  *
@@ -65,6 +73,22 @@ public class SubredditLogic extends GenericLogic <Subreddit, SubredditDAL>{
         //create a new Entity object
         Subreddit entity = new Subreddit();
 
+          if( parameterMap.containsKey( ID ) ){
+                try {
+                    entity.setId( Integer.parseInt( parameterMap.get( ID )[ 0 ] ) );
+                } catch( java.lang.NumberFormatException ex ) {
+                    throw new ValidationException( ex );
+                }
+        }
+      
+        if( parameterMap.containsKey( SUBSCRIBERS ) ){
+                try {
+                    entity.setSubscribers(Integer.parseInt( parameterMap.get( SUBSCRIBERS )[ 0 ] ) );
+                } catch( java.lang.NumberFormatException ex ) {
+                    throw new ValidationException( ex );
+                }
+        }   
+        
                //before using the values in the map, make sure to do error checking.
         //simple lambda to validate a string, this can also be place in another
         //method to be shared amoung all logic classes.
@@ -80,40 +104,17 @@ public class SubredditLogic extends GenericLogic <Subreddit, SubredditDAL>{
                 throw new ValidationException( error );
             }
         };
-        //ID is generated, so if it exists add it to the entity object
-        //otherwise it does not matter as mysql will create an if for it.
-        //the only time that we will have id is for update behaviour.
-       if( parameterMap.containsKey( ID ) ){
-                try {
-                    entity.setId( Integer.parseInt( parameterMap.get( ID )[ 0 ] ) );
-                } catch( java.lang.NumberFormatException ex ) {
-                    throw new ValidationException( ex );
-                }
-        }
-        if( parameterMap.containsKey( NAME ) ){
-                try {
-                    entity.setName(parameterMap.get( NAME )[ 0 ] );
-                } catch( java.lang.NumberFormatException ex ) {
-                    throw new ValidationException( ex );
-                }
-        }
-        
-        if( parameterMap.containsKey( URL ) ){
-                try {
-                    entity.setUrl(parameterMap.get( URL )[ 0 ] );
-                } catch( java.lang.NumberFormatException ex ) {
-                    throw new ValidationException( ex );
-                }
-        }
-        if( parameterMap.containsKey( SUBSCRIBERS ) ){
-                try {
-                    entity.setSubscribers(Integer.parseInt( parameterMap.get( SUBSCRIBERS )[ 0 ] ) );
-                } catch( java.lang.NumberFormatException ex ) {
-                    throw new ValidationException( ex );
-                }
-        }   
-
      
+        String name = parameterMap.get( NAME )[ 0 ];
+        String url = parameterMap.get( URL )[ 0 ];
+      
+       validator.accept( name, 100 );
+        validator.accept( url, 255 );
+        //set values on entity
+       
+        entity.setName(name );
+        entity.setUrl(url);
+
         return entity;        }
 
    

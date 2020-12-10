@@ -173,4 +173,8 @@ public class RedditWrapper {
         } );
         return this;
     }
+
+    public void getCurrentSubreddit(String subName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

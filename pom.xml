@@ -10,7 +10,7 @@
     <version>1.0</version>
     <packaging>war</packaging>
 
-    <name>RedditAnalytic-Skeleton</name>
+    <name>RedditAnalytic</name>
 
     <properties>
         <filename>lastname-firstname-labsection#</filename>

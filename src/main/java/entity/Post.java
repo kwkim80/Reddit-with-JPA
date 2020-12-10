@@ -35,7 +35,7 @@ import javax.validation.constraints.Size;
     @NamedQuery( name = "Post.findByCommentCount", query = "SELECT p FROM Post p WHERE p.commentCount = :commentCount" ),
     @NamedQuery( name = "Post.findByTitle", query = "SELECT p FROM Post p WHERE p.title = :title" ),
     @NamedQuery( name = "Post.findByAuthor", query = "SELECT p FROM Post p WHERE p.redditAccountId.id = :id" ),
-    @NamedQuery( name = "Post.findByUniqueId", query = "SELECT p FROM Post p WHERE p.unique_id = :uniqueId" ),
+    @NamedQuery( name = "Post.findByUniqueId", query = "SELECT p FROM Post p WHERE p.uniqueId = :uniqueId" ),
     @NamedQuery( name = "Post.findByCreated", query = "SELECT p FROM Post p WHERE p.created = :created" ) } )
 public class Post implements Serializable {
 

@@ -136,17 +136,8 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
                         entity.setCreated(Date.from( Instant.now( Clock.systemDefaultZone())));
                     }     
         }
-       
-     
-       
-        validator.accept( title, 45 );
-        validator.accept( unique_id, 45 );
-        
-//         validator.accept( created, 45 );
-//        validator.accept( reddit_account_id, 45 );
-//         validator.accept( subreddit_id, 45 );
-        
-
+       validator.accept( unique_id, 10 );
+      validator.accept( title, 255 );
         //set values on entity
        
         entity.setTitle(title );

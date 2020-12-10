@@ -30,7 +30,7 @@ public class PostDAL extends GenericDAL<Post>  {
 
     public Post findByUniqueId(String uniqueId){
         Map<String, Object> map = new HashMap<>();
-        map.put( "unique_id", uniqueId );
+        map.put( "uniqueId", uniqueId );
         return findResult( "Post.findByUniqueId", map );
     }
     
