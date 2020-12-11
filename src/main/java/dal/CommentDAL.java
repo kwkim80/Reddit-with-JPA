@@ -30,7 +30,7 @@ public class CommentDAL extends GenericDAL<Comment>{
     
     public Comment findByUniqueId(String uniqueId){
              HashMap<String, Object> map = new HashMap<>();
-        map.put("unique_id", uniqueId);
+        map.put("uniqueId", uniqueId);
         return findResult("Comment.findByUniqueId", map);
     
     }

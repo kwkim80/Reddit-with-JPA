@@ -11,6 +11,8 @@ import entity.Comment;
 import entity.RedditAccount;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -128,7 +130,7 @@ public Comment createEntity(Map<String, String[]> parameterMap){
                     try {
                         entity.setCreated(new SimpleDateFormat("dd/MM/yyyy").parse(parameterMap.get( CREATED )[ 0 ] ));
                     } catch (ParseException ex) {
-                        throw new ValidationException( ex );
+                        entity.setCreated(Date.from( Instant.now( Clock.systemDefaultZone())));
                     }     
         }
   

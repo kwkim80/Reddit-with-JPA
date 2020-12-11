@@ -139,7 +139,8 @@ public class CreateComment extends HttpServlet {
 
         CommentLogic cLogic = LogicFactory.getFor( "Comment" );
         String unique_id = request.getParameter( PostLogic.UNIQUE_ID );
-        if( cLogic.getCommentWithUniqueId(unique_id) == null ){
+        Comment temp=cLogic.getCommentWithUniqueId(unique_id);
+        if( temp == null ){
             try {
                 Comment comment = cLogic.createEntity( request.getParameterMap() );
                        
@@ -148,10 +149,13 @@ public class CreateComment extends HttpServlet {
                 //set the entities on your post object before adding them to db
                 RedditAccountLogic redditLogic=LogicFactory.getFor("RedditAccount");
             //    SubredditLogic subLogic=LogicFactory.getFor("Subreddit");
-       
-                comment.setRedditAccountId(null);
-       //         comment.setsetSubredditId(null);
-                cLogic.add( comment );
+        
+                PostLogic pLogic=LogicFactory.getFor("Post");
+                RedditAccount reddit = redditLogic.getWithId(Integer.valueOf(request.getParameter(cLogic.REDDIT_ACCOUNT_ID)));
+                Post post= pLogic.getWithId(Integer.valueOf(request.getParameter(cLogic.POST_ID)));
+                comment.setRedditAccountId(reddit );
+                comment.setPostId(post);
+                cLogic.add( comment );            
             } catch( Exception ex ) {
                 errorMessage = ex.getMessage();
             }
