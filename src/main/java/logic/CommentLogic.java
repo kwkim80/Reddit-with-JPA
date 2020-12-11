@@ -128,7 +128,7 @@ public Comment createEntity(Map<String, String[]> parameterMap){
           
         if( parameterMap.containsKey( CREATED ) ){
                     try {
-                        entity.setCreated(new SimpleDateFormat("dd/MM/yyyy").parse(parameterMap.get( CREATED )[ 0 ] ));
+                        entity.setCreated(new SimpleDateFormat("yyyyMMdd").parse(parameterMap.get( CREATED )[ 0 ] ));
                     } catch (ParseException ex) {
                         entity.setCreated(Date.from( Instant.now( Clock.systemDefaultZone())));
                     }     
@@ -149,15 +149,16 @@ public Comment createEntity(Map<String, String[]> parameterMap){
 }
 
 public List<String> getColumnNames(){
-    return Arrays.asList("id","reddit_account_id","post_id","unique_id","text","created","points","replys","is_reply");
+    return Arrays.asList("ID","Reddit_Account_ID","Post_ID","Unique_ID","Text","Points","Replys","Is_Reply","Created");
 }
 
+
 public List<String> getColumnCodes(){
-    return Arrays.asList(ID,REDDIT_ACCOUNT_ID,POST_ID,UNIQUE_ID,TEXT,CREATED,POINTS,REPLYS,IS_REPLY);
+    return Arrays.asList(ID,REDDIT_ACCOUNT_ID,POST_ID,UNIQUE_ID,TEXT,POINTS,REPLYS,IS_REPLY,CREATED);
 }
 
 public List<?> extractDataAsList(Comment c){
-    return Arrays.asList(c.getId(),c.getRedditAccountId(),c.getPostId(),c.getUniqueId(),c.getText(),c.getCreated(),c.getPoints(),c.getReplys(),c.getIsReply());
+    return Arrays.asList(c.getId(),c.getRedditAccountId().getName(),c.getPostId().getTitle(),c.getUniqueId(),c.getText(),c.getCreated(),c.getPoints(),c.getReplys(),c.getIsReply());
 }
 public static boolean isNumeric(String strNum) {
     if (strNum == null) {

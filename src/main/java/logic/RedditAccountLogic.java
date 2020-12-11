@@ -10,6 +10,8 @@ import dal.RedditAccountDAL;
 import entity.RedditAccount;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -33,13 +35,13 @@ public static final String ID = "id";
     }
 
     @Override
-    public List<String> getColumnNames() {
-        return Arrays.asList( "id", "name", "link_points", "comment_points","created");
+    public List<String> getColumnCodes() {
+        return Arrays.asList( ID, NAME,LINK_POINTS,COMMENT_POINTS, CREATED);
     }
 
     @Override
-    public List<String> getColumnCodes() {
-        return Arrays.asList( "id", "name", "link_points", "comment_points","created");
+    public List<String> getColumnNames() {
+        return Arrays.asList( "ID", "Name", "Link_Points", "Comment_Points","Created");
     }
 
     @Override
@@ -116,7 +118,7 @@ public static final String ID = "id";
                     try {
                         entity.setCreated(new SimpleDateFormat("yyyy-MM-dd").parse(parameterMap.get( CREATED )[ 0 ] ));
                     } catch (ParseException ex) {
-                        throw new ValidationException( ex );
+                      entity.setCreated(Date.from( Instant.now( Clock.systemDefaultZone())));
                     }     
         }
         return entity;        }

@@ -43,10 +43,12 @@ public class CreateAccount extends HttpServlet {
             out.println( "<html>" );
             out.println( "<head>" );
             out.println( "<title>Create Account</title>" );
+             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"style/tablestyle.css\">");
             out.println( "</head>" );
             out.println( "<body>" );
             out.println( "<div style=\"text-align: center;\">" );
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
+            out.println( "<h2>Create Account</h2>" );
             out.println( "<form method=\"post\">" );
             out.println( "Displayname:<br>" );
             //instead of typing the name of column manualy use the static vraiable in logic

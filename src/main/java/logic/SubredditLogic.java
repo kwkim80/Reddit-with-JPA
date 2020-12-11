@@ -120,13 +120,13 @@ public class SubredditLogic extends GenericLogic <Subreddit, SubredditDAL>{
    
    
      @Override
-    public List<String> getColumnNames() {
+    public List<String> getColumnCodes() {
         return Arrays.asList( ID, NAME, URL, SUBSCRIBERS);
     }
 
     @Override
-    public List<String> getColumnCodes() {
-        return Arrays.asList( "id", "name", "url", "subscribers");
+    public List<String> getColumnNames() {
+        return Arrays.asList( "ID", "Name", "Url", "Subscribers");
     }
 
     @Override

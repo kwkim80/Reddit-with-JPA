@@ -47,6 +47,7 @@ public class CommentTableView extends HttpServlet {
             out.println( "<html>" );
             out.println( "<head>" );
             out.println( "<title>CommentViewNormal</title>" );
+             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"style/tablestyle.css\">");
             out.println( "</head>" );
             out.println( "<body>" );
 
@@ -57,7 +58,7 @@ public class CommentTableView extends HttpServlet {
             //getColumnNames
              CommentLogic logic = LogicFactory.getFor("Comment" );
             out.println( "<tr>" );
-            logic.getColumnCodes().forEach(header -> {
+            logic.getColumnNames().forEach(header -> {
                 out.println( "<th>"+header+"</th>" );
             });
             out.println( "</tr>" );

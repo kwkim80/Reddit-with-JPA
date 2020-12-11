@@ -33,6 +33,7 @@ public class RedditAccountTableView extends HttpServlet{
             out.println( "<html>" );
             out.println( "<head>" );
             out.println( "<title>RedditAccountViewNormal</title>" );
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"style/tablestyle.css\">");
             out.println( "</head>" );
             out.println( "<body>" );
 
@@ -42,7 +43,7 @@ public class RedditAccountTableView extends HttpServlet{
             //logic to create headers in a loop.
                       out.println( "<tr>" );
             RedditAccountLogic logic = LogicFactory.getFor( "RedditAccount" );
-            logic.getColumnCodes().forEach(h -> out.println( "<th>"+h+"</th>" ));
+            logic.getColumnNames().forEach(h -> out.println( "<th>"+h+"</th>" ));
             out.println( "</tr>" );
    
             List<RedditAccount> entities = logic.getAll();

@@ -49,16 +49,22 @@ public class CreateSubreddit extends HttpServlet{
             out.println( "<html>" );
             out.println( "<head>" );
             out.println( "<title>Create Subreddit</title>" );
+             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"style/tablestyle.css\">");
             out.println( "</head>" );
             out.println( "<body>" );
             out.println( "<div style=\"text-align: center;\">" );
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
+            out.println( "<h2>Create Subreddit</h2>" );
             out.println( "<form method=\"post\">" );
             logic.getColumnNames().forEach((var column) -> {
-                if(!column.equalsIgnoreCase("ID")){
-                out.printf( "%s:<br>",column.substring(0, 1).toUpperCase() + column.substring(1) );
-                out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", column );
-                out.println( "<br>" );  
+               if(!column.equalsIgnoreCase("ID")){
+                    if(column.equalsIgnoreCase("Created")){
+                          out.printf( "%s: (ex: 20201210)<br>",column );
+                    }else{
+                         out.printf( "%s:<br>",column );
+                    }
+                    out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", column );
+                    out.println( "<br>" );  
                 }
              
             });

@@ -59,6 +59,7 @@ public class LoadDataView extends HttpServlet {
             out.println("<html>");
             out.println("<head>");
             out.println("<title>AccountViewNormal</title>");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"style/tablestyle.css\">");
             out.println("</head>");
             out.println("<body>");
             out.println("<div style=\"text-align: center;\">");
@@ -76,7 +77,7 @@ public class LoadDataView extends HttpServlet {
             out.println("</form>");
             out.print("<div >");
             out.println("<table style=\"margin-left: auto; margin-right: auto;\" border=\"1\">");
-            out.println("<caption>Post</caption>");
+            out.println("<caption>Load Data from Reddit Site</caption>");
             //this is an example, for your other tables use getColumnNames from
             //logic to create headers in a loop.
             //getColumnNames
@@ -89,7 +90,7 @@ public class LoadDataView extends HttpServlet {
             out.println("</tr>");
 
             if (list == null || list.isEmpty()) {
-                out.println("<tr><td colspan='8'>There is no data</td></tr>");
+                out.println("<tr><td colspan='8' align='center'>There is no data</td></tr>");
             } else {
                 for (Post e : list) {
                     //for other tables replace the code bellow with
@@ -109,7 +110,7 @@ public class LoadDataView extends HttpServlet {
             });
             out.println("</tr>");
             out.println("</table>");
-            out.print("<div style='text-align: right;'> <input type='submit' name='add' value='Add and View'> </div>");
+            out.print("<div style='text-align: right;'><form method=\"post\"> <input type='submit' name='add' value='Add and View'> </form></div>");
             out.print("</div>");
 
             out.printf("<div style=\"text-align: center;\"><pre>%s</pre></div>", toStringMap(request.getParameterMap()));
@@ -159,7 +160,8 @@ public class LoadDataView extends HttpServlet {
             throws ServletException, IOException {
         log("POST");
         //TODO fill in your reddit infromation here
-        String clientID = "oIA7yTgEh7NmeA";
+        if(request.getParameter( "search" ) != null){
+             String clientID = "oIA7yTgEh7NmeA";
         String clientSecret = "lVhwxbIeZ6vZOhNm1sOCTo79bfk";
         String redditUser = "kw2446";
         String algonquinUser = "kim00395";
@@ -224,8 +226,8 @@ public class LoadDataView extends HttpServlet {
 
 
                 CommentLogic cLogic = LogicFactory.getFor("Comment");
-                String unique_id = request.getParameter(cLogic.UNIQUE_ID);
-                Comment newComment = cLogic.getCommentWithUniqueId(unique_id);
+                //String unique_id = request.getParameter(cLogic.UNIQUE_ID);
+                Comment newComment = cLogic.getCommentWithUniqueId(comment.getUniqueID());
                 if (newComment == null) {
                     Map<String, String[]> map = new HashMap<>(6);
                     map.put(cLogic.TEXT, new String[]{comment.getText()});
@@ -268,6 +270,14 @@ public class LoadDataView extends HttpServlet {
         //get the next page and process every post
         scrap.requestNextPage().proccessCurrentPage(saveData);
         processRequest(request, response);
+        }else if( request.getParameter( "add" ) != null ){
+            //if view button is pressed redirect to the appropriate table
+            response.sendRedirect( "PostTable" );
+        }else if( request.getParameter( "addNview" ) != null ){
+            //if view button is pressed redirect to the appropriate table
+            response.sendRedirect( "PostTable" );
+        }
+       
     }
 
     /**

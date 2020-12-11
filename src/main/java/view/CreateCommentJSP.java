@@ -1,6 +1,7 @@
 package view;
 
 import entity.Comment;
+import entity.Comment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logic.CommentLogic;
 import logic.LogicFactory;
+import logic.CommentLogic;
 
 /**
  *
@@ -23,7 +25,7 @@ import logic.LogicFactory;
 @WebServlet( name = "CreateCommentJSP", urlPatterns = { "/CreateCommentJSP" } )
 public class CreateCommentJSP extends HttpServlet {
 
-    private void fillTableData( HttpServletRequest req, HttpServletResponse resp )
+   private void fillTableData( HttpServletRequest req, HttpServletResponse resp )
             throws ServletException, IOException {
         String path = req.getServletPath();
         req.setAttribute( "entities", extractTableData( req ) );
@@ -34,8 +36,20 @@ public class CreateCommentJSP extends HttpServlet {
     }
 
     private List<?> extractTableData( HttpServletRequest req ) {
-        
-        return null;
+        String search = req.getParameter( "searchText" );
+        CommentLogic logic = LogicFactory.getFor( "Comment" );
+        req.setAttribute( "columnName", logic.getColumnNames() );
+        req.setAttribute( "columnCode", logic.getColumnCodes() );
+        List<Comment> list;
+        if( search != null ){
+            list = logic.search( search );
+        } else {
+            list = logic.getAll();
+        }
+        if( list == null || list.isEmpty() ){
+            return Collections.emptyList();
+        }
+        return appendDatatoNewList( list, logic::extractDataAsList );
     }
 
     private <T> List<?> appendDatatoNewList( List<T> list, Function<T, List<?>> toArray ) {
@@ -68,9 +82,9 @@ public class CreateCommentJSP extends HttpServlet {
             throws ServletException, IOException {
         log( "POST" );
         CommentLogic logic = LogicFactory.getFor( "Comment" );
-//        Comment comment = logic.updateEntity( req.getParameterMap() );
-//        logic.update( comment );
-//        fillTableData( req, resp );
+        Comment account = logic.updateEntity( req.getParameterMap() );
+        logic.update( account );
+        fillTableData( req, resp );
     }
 
     /**

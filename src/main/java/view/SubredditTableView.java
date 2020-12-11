@@ -43,6 +43,7 @@ public class SubredditTableView extends HttpServlet{
             out.println( "<html>" );
             out.println( "<head>" );
             out.println( "<title>SubredditViewNormal</title>" );
+             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"style/tablestyle.css\">");
             out.println( "</head>" );
             out.println( "<body>" );
 
@@ -55,7 +56,7 @@ public class SubredditTableView extends HttpServlet{
             SubredditLogic logic = LogicFactory.getFor( "Subreddit" );
            
             out.println( "<tr>" );
-            logic.getColumnCodes().forEach(header -> {
+            logic.getColumnNames().forEach(header -> {
                 out.printf( "<th>%s</th>", header.substring(0, 1).toUpperCase() + header.substring(1) );
             });
             out.println( "</tr>" );

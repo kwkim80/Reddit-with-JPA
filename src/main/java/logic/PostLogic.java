@@ -161,13 +161,13 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
     }
 
     @Override
-    public List<String> getColumnNames() {
+    public List<String> getColumnCodes() {
         return Arrays.asList( ID, TITLE, UNIQUE_ID, REDDIT_ACCOUNT_ID,SUBREDDIT_ID,COMMENT_COUNT,POINTS,CREATED );
     }
 
     @Override
-    public List<String> getColumnCodes() {
-        return Arrays.asList( "ID", "TITLE", "UNIQUE_ID", "REDDIT_ACCOUNT_ID","SUBREDDIT_ID","COMMENT_COUNT","POINTS","CREATED" );
+    public List<String> getColumnNames() {
+        return Arrays.asList( "ID", "Title", "Unique_ID", "Reddit_Account_ID","Subreddit_ID","Ccomment_Count","Points","Created" );
     }
 
    

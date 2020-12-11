@@ -37,6 +37,7 @@ public class AccountTableView extends HttpServlet {
             out.println( "<html>" );
             out.println( "<head>" );
             out.println( "<title>AccountViewNormal</title>" );
+             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"style/tablestyle.css\">");
             out.println( "</head>" );
             out.println( "<body>" );
 

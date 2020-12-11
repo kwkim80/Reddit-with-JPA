@@ -5,7 +5,9 @@ table {
     margin-right: auto;
 }
 
-th,
+th{
+    background-color: #f2f2f2
+}
 td {
     text-align: left;
     padding: 8px;
@@ -26,5 +28,5 @@ input.update{
     width: 100%;
 }
 tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #e1e1e1;
 }
