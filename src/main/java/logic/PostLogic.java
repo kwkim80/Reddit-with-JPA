@@ -33,7 +33,7 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
     public static final String ID = "id";
     public static final String UNIQUE_ID = "unique_id";
     public static final String REDDIT_ACCOUNT_ID = "reddit_account_id";
-    public static final String SUBREDDIT_ID  = "subreddi    t_id";
+    public static final String SUBREDDIT_ID  = "subreddit_id";
 
     PostLogic() {
         super(new PostDAL());
@@ -157,7 +157,7 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
     
     @Override
     public List<?> extractDataAsList(Post e) {
-        return Arrays.asList( e.getId(), e.getTitle(), e.getUniqueID(), e.getRedditAccountId().getName(), e.getSubredditId().getName(), e.getCommentCount(), e.getPoints(), e.getCreated() );   
+        return Arrays.asList( e.getId(), e.getTitle(), e.getUniqueID(), e.getRedditAccountId().getId(), e.getSubredditId().getId(), e.getCommentCount(), e.getPoints(), e.getCreated() );   
     }
 
     @Override
@@ -167,7 +167,7 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
 
     @Override
     public List<String> getColumnNames() {
-        return Arrays.asList( "ID", "Title", "Unique_ID", "Reddit_Account_ID","Subreddit_ID","Ccomment_Count","Points","Created" );
+        return Arrays.asList( "ID", "Title", "Unique_ID", "Reddit_Account_ID","Subreddit_ID","Comment_Count","Points","Created" );
     }
 
    

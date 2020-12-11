@@ -41,7 +41,7 @@ import reddit.wrapper.SubSort;
 public class LoadDataView extends HttpServlet {
 
     private List<Post> list = null;
-
+    private List<Comment> comments=new ArrayList<>();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -75,7 +75,7 @@ public class LoadDataView extends HttpServlet {
             out.println("</select>");
             out.println("<input type=\"submit\" name=\"search\" value=\"Search\"></div>");
             out.println("</form>");
-            out.print("<div >");
+            out.printf("<div style='visibility:%s'>", list==null?"hidden":"visible");
             out.println("<table style=\"margin-left: auto; margin-right: auto;\" border=\"1\">");
             out.println("<caption>Load Data from Reddit Site</caption>");
             //this is an example, for your other tables use getColumnNames from
@@ -110,7 +110,9 @@ public class LoadDataView extends HttpServlet {
             });
             out.println("</tr>");
             out.println("</table>");
-            out.print("<div style='text-align: right;'><form method=\"post\"> <input type='submit' name='add' value='Add and View'> </form></div>");
+            out.print("<div style='text-align: right;'>"
+                    + "<form method=\"post\"> <input type='submit' name='add' value='Add'> "
+                    + "<input type='submit' name='addNview' value='Add and View'></form></div>");
             out.print("</div>");
 
             out.printf("<div style=\"text-align: center;\"><pre>%s</pre></div>", toStringMap(request.getParameterMap()));
@@ -160,19 +162,23 @@ public class LoadDataView extends HttpServlet {
             throws ServletException, IOException {
         log("POST");
         //TODO fill in your reddit infromation here
+        RedditAccountLogic raLogic = LogicFactory.getFor("RedditAccount");
+         CommentLogic cLogic = LogicFactory.getFor("Comment");
+         PostLogic pLogic = LogicFactory.getFor("Post");
         if(request.getParameter( "search" ) != null){
              String clientID = "oIA7yTgEh7NmeA";
         String clientSecret = "lVhwxbIeZ6vZOhNm1sOCTo79bfk";
         String redditUser = "kw2446";
         String algonquinUser = "kim00395";
 
-        list = new ArrayList<>();
+        list=new ArrayList<>();
+        comments.clear();
         DeveloperAccount dev = new DeveloperAccount()
                 .setClientID(clientID)
                 .setClientSecret(clientSecret)
                 .setRedditUser(redditUser)
                 .setAlgonquinUser(algonquinUser);
-        RedditAccountLogic raLogic = LogicFactory.getFor("RedditAccount");
+        //RedditAccountLogic raLogic = LogicFactory.getFor("RedditAccount");
         //create a new scraper
         RedditWrapper scrap = new RedditWrapper();
         //authenticate and set up a page for wallpaper subreddit with 5 posts soreted by HOT order
@@ -195,9 +201,10 @@ public class LoadDataView extends HttpServlet {
                 map.put(RedditAccountLogic.CREATED, new String[]{raLogic.convertDateToString(aw.getCreated())});
                 map.put(RedditAccountLogic.NAME, new String[]{aw.getName()});
                 acc = raLogic.createEntity(map);
-                raLogic.add(acc);
+                //raLogic.add(acc);
             }
-            PostLogic pLogic = LogicFactory.getFor("Post");
+            
+      
             Post newPost = pLogic.getPostWithUniqueId(post.getUniqueID());
             if (newPost == null) {
                 Map<String, String[]> map = new HashMap<>(6);
@@ -213,11 +220,13 @@ public class LoadDataView extends HttpServlet {
                 Subreddit sub = subLogic.getSubredditWithName(subName);
                 newPost.setRedditAccountId(acc);
                 newPost.setSubredditId(sub);
+                newPost.setCommentList(comments);
                 newPost.setCreated(Date.from(Instant.now(Clock.systemDefaultZone())));
-                pLogic.add(newPost);
+                //pLogic.add(newPost);
                 list.add(newPost);
             }
-            final Post finalP = newPost;
+            //final Post finalP = newPost;
+               
             post.configComments(2, 2, CommentSort.CONFIDENCE);
             post.processComments(comment -> {
                 if (comment.isPinned() || comment.getDepth() == 0) {
@@ -225,7 +234,7 @@ public class LoadDataView extends HttpServlet {
                 }
 
 
-                CommentLogic cLogic = LogicFactory.getFor("Comment");
+//                CommentLogic cLogic = LogicFactory.getFor("Comment");
                 //String unique_id = request.getParameter(cLogic.UNIQUE_ID);
                 Comment newComment = cLogic.getCommentWithUniqueId(comment.getUniqueID());
                 if (newComment == null) {
@@ -257,22 +266,43 @@ public class LoadDataView extends HttpServlet {
                     newComment.setCreated(Date.from(Instant.now(Clock.systemDefaultZone())));
                     newComment.setRedditAccountId(acc1);
                    //Post temp=pLogic.getWithId(1);
-                    newComment.setPostId(finalP);
-                     
-                    cLogic.add(newComment);
+                   // newComment.setPostId(finalP);
+                     comments.add(newComment);
+                    //cLogic.add(newComment);
 
                 }
-
-                System.out.println((comment.isParrent() ? "----" : comment.getDepth() + ")") + "(" + comment.getAuthor().getName() + ")" + comment.getText());
+                 System.out.println((comment.isParrent() ? "----" : comment.getDepth() + ")") + "(" + comment.getAuthor().getName() + ")" + comment.getText());
 
             });
+//          
         };
         //get the next page and process every post
         scrap.requestNextPage().proccessCurrentPage(saveData);
         processRequest(request, response);
         }else if( request.getParameter( "add" ) != null ){
-            //if view button is pressed redirect to the appropriate table
-            response.sendRedirect( "PostTable" );
+            for (Post post : list) {
+               RedditAccount ra= post.getRedditAccountId();
+               List<Comment> clist=new ArrayList<>();
+               if(raLogic.getRedditAccountWithName(ra.getName())==null){
+                   raLogic.add(ra);
+               }
+               if(pLogic.getPostWithUniqueId(post.getUniqueID())==null){
+                   
+                   clist=post.getCommentList();
+                   post.setCommentList(null);
+                   pLogic.add(post);
+               }
+                for (Comment comment : clist) {
+                    if(cLogic.getCommentWithUniqueId(comment.getUniqueId())==null){
+                        comment.setPostId(post);
+                        cLogic.add(comment);
+                    }
+                }
+                
+            }
+            list=null;
+            comments.clear();
+            processRequest(request, response);
         }else if( request.getParameter( "addNview" ) != null ){
             //if view button is pressed redirect to the appropriate table
             response.sendRedirect( "PostTable" );

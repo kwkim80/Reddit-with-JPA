@@ -158,7 +158,7 @@ public List<String> getColumnCodes(){
 }
 
 public List<?> extractDataAsList(Comment c){
-    return Arrays.asList(c.getId(),c.getRedditAccountId().getName(),c.getPostId().getTitle(),c.getUniqueId(),c.getText(),c.getCreated(),c.getPoints(),c.getReplys(),c.getIsReply());
+    return Arrays.asList(c.getId(),c.getRedditAccountId().getId(),c.getPostId().getTitle(),c.getUniqueId(),c.getText(),c.getCreated(),c.getPoints(),c.getReplys(),c.getIsReply());
 }
 public static boolean isNumeric(String strNum) {
     if (strNum == null) {

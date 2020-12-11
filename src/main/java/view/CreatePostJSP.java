@@ -30,7 +30,7 @@ public class CreatePostJSP extends HttpServlet {
         req.setAttribute( "request", toStringMap( req.getParameterMap() ) );
         req.setAttribute( "path", path );
         req.setAttribute( "title", path.substring( 1 ) );
-        req.getRequestDispatcher( "/jsp/ShowTable-Post.jsp" ).forward( req, resp );
+        req.getRequestDispatcher( "/jsp/Input-Post.jsp" ).forward( req, resp );
     }
 
     private List<?> extractTableData( HttpServletRequest req ) {

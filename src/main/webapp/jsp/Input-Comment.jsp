@@ -18,7 +18,7 @@
                 <h2>Create RedditAccount</h2>
 
                 <div class="form-style-2">
-                    <div class="form-style-2-heading">Please enter information</div>
+                    <div class="form-style-2-heading">Please enter your information</div>
                     <form method="post">
 
                         <label for="field1"><span>Name <span class="required">*</span></span><input type="text" class="input-field" name="name" value="" /></label>

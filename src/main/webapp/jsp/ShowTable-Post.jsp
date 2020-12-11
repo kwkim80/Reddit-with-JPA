@@ -31,7 +31,7 @@
             function convertCellToInput( id, readOnly, name){
                 var idCell = document.getElementById(id);
                 var idInput = createTextInput(idCell.innerText, name);
-                idInput.readOnly = readOnly;
+                idInput.readOnly = (name==="reddit_account_id"|| name==="subreddit_id")?true:readOnly;
                 idCell.innerText = null;
                 idCell.appendChild(idInput);
             }
@@ -50,7 +50,7 @@
                         activeEditID = id;
                         this.value = "Update";
                         
-                        <c:forEach var="code" items="${columnCode}">
+                        <c:forEach var="code" items="${columnCode}">  
                             convertCellToInput( ++id, false, "${code}");
                         </c:forEach>
                     };
