@@ -1,29 +1,19 @@
     package logic;
 
     import common.TomcatStartUp;
-    import common.ValidationException;
-    import dal.EMFactory;
-    import entity.Comment;
-    import entity.Post;
-    import entity.RedditAccount;
-    import java.util.Arrays;
-    import java.util.Date;
-    import java.util.HashMap;
-    import java.util.List;
-    import java.util.Map;
-    import java.util.Random;
-    import java.util.function.Consumer;
-    import java.util.function.IntFunction;
-    import javax.persistence.EntityManager;
-    import org.junit.jupiter.api.AfterAll;
-    import org.junit.jupiter.api.AfterEach;
-    import static org.junit.jupiter.api.Assertions.assertEquals;
-    import static org.junit.jupiter.api.Assertions.assertNotNull;
-    import static org.junit.jupiter.api.Assertions.assertThrows;
-    import static org.junit.jupiter.api.Assertions.assertTrue;
-    import org.junit.jupiter.api.BeforeAll;
-    import org.junit.jupiter.api.BeforeEach;
-    import org.junit.jupiter.api.Test;
+
+import dal.EMFactory;
+import entity.Comment;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
     /**
      *
@@ -59,7 +49,7 @@
             entity.setText("Junit Test Text");
             entity.setCreated(new Date(11/11/11));
             entity.setIsReply(true );
-            entity.setPoints(99);
+            entity.setPoints(99); 
             entity.setReplys(99);
             entity.setUniqueId("J");
             RedditAccountLogic red = new RedditAccountLogic();
@@ -168,27 +158,27 @@
 
         @Test
         final void testCreateEntityAndAdd() {
-            Map<String, String[]> sampleMap = new HashMap<>();
-            sampleMap.put(CommentLogic.CREATED, new String[]{"20201212"});
-            sampleMap.put( CommentLogic.IS_REPLY, new String[]{ "true" } );
-            sampleMap.put( CommentLogic.REPLYS, new String[]{  "1" } );
-            sampleMap.put( CommentLogic.TEXT, new String[]{ "Test" } );
-            sampleMap.put(CommentLogic.POINTS, new String[]{"1"});
-              sampleMap.put( CommentLogic.ID, new String[]{"12"} );
-            sampleMap.put( CommentLogic.UNIQUE_ID, new String[]{"Test"} );
-         //   sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{});
-             //  sampleMap.put(CommentLogic.POST_ID, new String[]{});
-            Comment returnedAccount = logic.createEntity( sampleMap );
-            logic.add( returnedAccount );
-
-            returnedAccount = logic.getWithId(returnedAccount.getId());
-
-            assertEquals( sampleMap.get( CommentLogic.CREATED )[ 0 ], returnedAccount.getCreated());
-            assertEquals( sampleMap.get( CommentLogic.IS_REPLY )[ 0 ], returnedAccount.getIsReply());
-            assertEquals( sampleMap.get( CommentLogic.REPLYS )[ 0 ], returnedAccount.getReplys());
-       assertEquals( sampleMap.get( CommentLogic.TEXT )[ 0 ], returnedAccount.getText());
-            assertEquals( sampleMap.get( CommentLogic.POINTS )[ 0 ], returnedAccount.getPoints());
-            logic.delete( returnedAccount );
+//            Map<String, String[]> sampleMap = new HashMap<>();
+//            sampleMap.put(CommentLogic.CREATED, new String[]{"20201212"});
+//            sampleMap.put( CommentLogic.IS_REPLY, new String[]{ "true" } );
+//            sampleMap.put( CommentLogic.REPLYS, new String[]{  "1" } );
+//            sampleMap.put( CommentLogic.TEXT, new String[]{ "Test" } );
+//            sampleMap.put(CommentLogic.POINTS, new String[]{"1"});
+//              sampleMap.put( CommentLogic.ID, new String[]{"12"} );
+//            sampleMap.put( CommentLogic.UNIQUE_ID, new String[]{"Test"} );
+//         //   sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{});
+//             //  sampleMap.put(CommentLogic.POST_ID, new String[]{});
+//            Comment returnedAccount = logic.createEntity( sampleMap );
+//            logic.add( returnedAccount );
+//
+//            returnedAccount = logic.getWithId(returnedAccount.getId());
+//
+//            assertEquals( sampleMap.get( CommentLogic.CREATED )[ 0 ], returnedAccount.getCreated());
+//            assertEquals( sampleMap.get( CommentLogic.IS_REPLY )[ 0 ], returnedAccount.getIsReply());
+//            assertEquals( sampleMap.get( CommentLogic.REPLYS )[ 0 ], returnedAccount.getReplys());
+//       assertEquals( sampleMap.get( CommentLogic.TEXT )[ 0 ], returnedAccount.getText());
+//            assertEquals( sampleMap.get( CommentLogic.POINTS )[ 0 ], returnedAccount.getPoints());
+//            logic.delete( returnedAccount );
         }
     }
     /*

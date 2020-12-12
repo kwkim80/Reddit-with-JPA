@@ -27,6 +27,8 @@ import logic.SubredditLogic;
  */
 @WebServlet( name = "CreateSubredditJSP", urlPatterns = { "/CreateSubredditJSP" } )
 public class CreateSubredditJSP extends HttpServlet{
+    private String errorMessage = null;
+    
     private void fillTableData( HttpServletRequest req, HttpServletResponse resp )
             throws ServletException, IOException {
         String path = req.getServletPath();
@@ -84,9 +86,28 @@ public class CreateSubredditJSP extends HttpServlet{
             throws ServletException, IOException {
         log( "POST" );
         SubredditLogic logic = LogicFactory.getFor( "Subreddit" );
-        Subreddit item = logic.updateEntity( req.getParameterMap() );
-        logic.update( item );
-        fillTableData( req, resp );
+        String name = req.getParameter( SubredditLogic.NAME );
+        Subreddit item = logic.getSubredditWithName(name);
+        if (item == null) {
+            try {
+                item = logic.createEntity(req.getParameterMap());
+                logic.add(item);
+                errorMessage = "";
+            } catch (Exception ex) {
+                errorMessage = ex.getMessage();
+            }
+        } else {
+            //if duplicate print the error message
+            errorMessage = "Name: \"" + name + "\" already exists";
+        }
+        if (req.getParameter("add") != null) {
+            //if add button is pressed return the same page
+
+            fillTableData(req, resp);
+        } else if (req.getParameter("view") != null) {
+            //if view button is pressed redirect to the appropriate table
+            resp.sendRedirect("SubredditTableJSP");
+        }
     }
 
     /**

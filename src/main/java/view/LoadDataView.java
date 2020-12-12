@@ -239,27 +239,27 @@ public class LoadDataView extends HttpServlet {
                 Comment newComment = cLogic.getCommentWithUniqueId(comment.getUniqueID());
                 if (newComment == null) {
                     Map<String, String[]> map = new HashMap<>(6);
-                    map.put(cLogic.TEXT, new String[]{comment.getText()});
-                    map.put(cLogic.UNIQUE_ID, new String[]{comment.getUniqueID()});
-                    map.put(cLogic.POINTS, new String[]{Integer.toString(comment.getVotes())});
-                    map.put(cLogic.REPLYS, new String[]{Integer.toString(comment.getReplyCount())});
-                    map.put(cLogic.IS_REPLY, new String[]{Boolean.toString(!comment.isParrent())});
+                    map.put(CommentLogic.TEXT, new String[]{comment.getText()});
+                    map.put(CommentLogic.UNIQUE_ID, new String[]{comment.getUniqueID()});
+                    map.put(CommentLogic.POINTS, new String[]{Integer.toString(comment.getVotes())});
+                    map.put(CommentLogic.REPLYS, new String[]{Integer.toString(comment.getReplyCount())});
+                    map.put(CommentLogic.IS_REPLY, new String[]{Boolean.toString(!comment.isParrent())});
                     newComment = cLogic.createEntity(map);
                    
                     //create the two logics for reddit account and subreddit
                     //get the entities from logic using getWithId
                     //set the entities on your post object before adding them to db
-                    RedditAccountLogic raLogic1 = LogicFactory.getFor("RedditAccount");
+                    //RedditAccountLogic raLogic1 = LogicFactory.getFor("RedditAccount");
                      AccountWrapper aw1 = comment.getAuthor();
                     RedditAccount acc1 = raLogic.getRedditAccountWithName(aw1.getName());
                     if (acc1 == null) {
                         Map<String, String[]> map1 = new HashMap<>(6);
                         map1.put(RedditAccountLogic.COMMENT_POINTS, new String[]{Integer.toString(aw1.getCommentKarma())});
                         map1.put(RedditAccountLogic.LINK_POINTS, new String[]{Integer.toString(aw1.getLinkKarma())});
-                        map1.put(RedditAccountLogic.CREATED, new String[]{raLogic1.convertDateToString(aw1.getCreated())});
+                        map1.put(RedditAccountLogic.CREATED, new String[]{raLogic.convertDateToString(aw1.getCreated())});
                         map1.put(RedditAccountLogic.NAME, new String[]{aw1.getName()});
-                        acc1 = raLogic1.createEntity(map1);
-                        raLogic1.add(acc1);
+                        acc1 = raLogic.createEntity(map1);
+                        raLogic.add(acc1);
                     }
                     //RedditAccount reddit = redditLogic.getWithId(Integer.valueOf(request.getParameter(cLogic.REDDIT_ACCOUNT_ID)));
                     //RedditAccount reddit = redditLogic.getWithId(Integer.valueOf(acc.getId()));
@@ -279,7 +279,7 @@ public class LoadDataView extends HttpServlet {
         //get the next page and process every post
         scrap.requestNextPage().proccessCurrentPage(saveData);
         processRequest(request, response);
-        }else if( request.getParameter( "add" ) != null ){
+        }else {
             for (Post post : list) {
                RedditAccount ra= post.getRedditAccountId();
                List<Comment> clist=new ArrayList<>();
@@ -300,12 +300,13 @@ public class LoadDataView extends HttpServlet {
                 }
                 
             }
+            if( request.getParameter( "add" ) != null ){
             list=null;
             comments.clear();
             processRequest(request, response);
-        }else if( request.getParameter( "addNview" ) != null ){
-            //if view button is pressed redirect to the appropriate table
+            }else if( request.getParameter( "addNview" ) != null ){
             response.sendRedirect( "PostTable" );
+            }
         }
        
     }

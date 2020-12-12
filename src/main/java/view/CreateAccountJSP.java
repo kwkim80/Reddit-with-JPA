@@ -22,7 +22,8 @@ import logic.LogicFactory;
  */
 @WebServlet( name = "CreateAccountJSP", urlPatterns = { "/CreateAccountJSP" } )
 public class CreateAccountJSP extends HttpServlet {
-
+    private String errorMessage = null;
+     
     private void fillTableData( HttpServletRequest req, HttpServletResponse resp )
             throws ServletException, IOException {
         String path = req.getServletPath();
@@ -30,7 +31,7 @@ public class CreateAccountJSP extends HttpServlet {
         req.setAttribute( "request", toStringMap( req.getParameterMap() ) );
         req.setAttribute( "path", path );
         req.setAttribute( "title", path.substring( 1 ) );
-        req.getRequestDispatcher( "/jsp/ShowTable-Account.jsp" ).forward( req, resp );
+        req.getRequestDispatcher( "/jsp/Input-Account.jsp" ).forward( req, resp );
     }
 
     private List<?> extractTableData( HttpServletRequest req ) {
@@ -79,10 +80,32 @@ public class CreateAccountJSP extends HttpServlet {
     protected void doPost( HttpServletRequest req, HttpServletResponse resp )
             throws ServletException, IOException {
         log( "POST" );
-        AccountLogic logic = LogicFactory.getFor( "Account" );
-        Account account = logic.updateEntity( req.getParameterMap() );
-        logic.update( account );
-        fillTableData( req, resp );
+        
+         AccountLogic logic = LogicFactory.getFor( "Account" );
+        String username = req.getParameter( AccountLogic.USERNAME );
+        Account item = logic.getAccountWithUsername( username );
+        if( item == null ){
+            try {
+                Account account = logic.createEntity( req.getParameterMap() );
+                logic.add( account );
+                errorMessage = "";
+            } catch( Exception ex ) {
+                errorMessage = ex.getMessage();
+            }
+        } else {
+            //if duplicate print the error message
+            errorMessage = "Username: \"" + username + "\" already exists";
+        }
+         if (req.getParameter("add") != null) {
+            //if add button is pressed return the same page
+
+            fillTableData(req, resp);
+        } else if (req.getParameter("view") != null) {
+            //if view button is pressed redirect to the appropriate table
+            resp.sendRedirect("AccountTableJSP");
+        }
+        
+       
     }
 
     /**
