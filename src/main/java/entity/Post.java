@@ -36,7 +36,9 @@ import javax.validation.constraints.Size;
     @NamedQuery( name = "Post.findByTitle", query = "SELECT p FROM Post p WHERE p.title = :title" ),
     @NamedQuery( name = "Post.findByAuthor", query = "SELECT p FROM Post p WHERE p.redditAccountId.id = :id" ),
     @NamedQuery( name = "Post.findByUniqueId", query = "SELECT p FROM Post p WHERE p.uniqueId = :uniqueId" ),
-    @NamedQuery( name = "Post.findByCreated", query = "SELECT p FROM Post p WHERE p.created = :created" ) } )
+    @NamedQuery( name = "Post.findByCreated", query = "SELECT p FROM Post p WHERE p.created = :created" ),
+    @NamedQuery( name = "Post.findContaining", query = "SELECT p FROM Post p WHERE p.title like CONCAT('%', :search, '%') or p.uniqueId like CONCAT('%', :search, '%')" )
+} )
 public class Post implements Serializable {
 
     @Basic( optional = false )

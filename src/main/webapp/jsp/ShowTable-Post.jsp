@@ -1,7 +1,7 @@
 <%-- 
     Document   : ShowTable-Post
     Created on : Nov. 26, 2020, 1:25:04 a.m.
-    Author     : kw244
+    Author     : kiwoong kim
 --%>
 
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>

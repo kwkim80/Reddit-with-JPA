@@ -1,8 +1,9 @@
 <%-- 
     Document   : ShowTable-Post
     Created on : Nov. 26, 2020, 1:25:04 a.m.
-    Author     : kw244
+    Author     : kiwoong kim
 --%>
+
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -30,7 +31,7 @@
             function convertCellToInput( id, readOnly, name){
                 var idCell = document.getElementById(id);
                 var idInput = createTextInput(idCell.innerText, name);
-                idInput.readOnly = readOnly;
+                idInput.readOnly = (name==="reddit_account_id"|| name==="post_id")?true:readOnly;
                 idCell.innerText = null;
                 idCell.appendChild(idInput);
             }

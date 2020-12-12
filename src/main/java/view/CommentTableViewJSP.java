@@ -6,6 +6,8 @@
 package view;
 
 import entity.Comment;
+import entity.Post;
+import entity.RedditAccount;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,54 +22,57 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logic.CommentLogic;
 import logic.LogicFactory;
+import logic.PostLogic;
+import logic.RedditAccountLogic;
 
 /**
  *
  * @author kw244
  */
-@WebServlet( name = "CommentTableJSP", urlPatterns = { "/CommentTableJSP" } )
-public class CommentTableViewJSP extends HttpServlet{
-    private void fillTableData( HttpServletRequest req, HttpServletResponse resp )
+@WebServlet(name = "CommentTableJSP", urlPatterns = {"/CommentTableJSP"})
+public class CommentTableViewJSP extends HttpServlet {
+
+    private void fillTableData(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String path = req.getServletPath();
-        req.setAttribute( "entities", extractTableData( req ) );
-        req.setAttribute( "request", toStringMap( req.getParameterMap() ) );
-        req.setAttribute( "path", path );
-        req.setAttribute( "title", path.substring( 1 ) );
-        req.getRequestDispatcher( "/jsp/ShowTable-Comment.jsp" ).forward( req, resp );
+        req.setAttribute("entities", extractTableData(req));
+        req.setAttribute("request", toStringMap(req.getParameterMap()));
+        req.setAttribute("path", path);
+        req.setAttribute("title", path.substring(1));
+        req.getRequestDispatcher("/jsp/ShowTable-Comment.jsp").forward(req, resp);
     }
 
-    private List<?> extractTableData( HttpServletRequest req ) {
-        String search = req.getParameter( "searchText" );
-        CommentLogic logic = LogicFactory.getFor( "Comment" );
-        req.setAttribute( "columnName", logic.getColumnNames() );
-        req.setAttribute( "columnCode", logic.getColumnCodes() );
+    private List<?> extractTableData(HttpServletRequest req) {
+        String search = req.getParameter("searchText");
+        CommentLogic logic = LogicFactory.getFor("Comment");
+        req.setAttribute("columnName", logic.getColumnNames());
+        req.setAttribute("columnCode", logic.getColumnCodes());
         List<Comment> list;
-        if( search != null ){
-            list = logic.search( search );
+        if (search != null) {
+            list = logic.search(search);
         } else {
             list = logic.getAll();
         }
-        if( list == null || list.isEmpty() ){
+        if (list == null || list.isEmpty()) {
             return Collections.emptyList();
         }
-        return appendDatatoNewList( list, logic::extractDataAsList );
+        return appendDatatoNewList(list, logic::extractDataAsList);
     }
 
-    private <T> List<?> appendDatatoNewList( List<T> list, Function<T, List<?>> toArray ) {
-        List<List<?>> newlist = new ArrayList<>( list.size() );
-        list.forEach( i -> newlist.add( toArray.apply( i ) ) );
+    private <T> List<?> appendDatatoNewList(List<T> list, Function<T, List<?>> toArray) {
+        List<List<?>> newlist = new ArrayList<>(list.size());
+        list.forEach(i -> newlist.add(toArray.apply(i)));
         return newlist;
     }
 
-    private String toStringMap( Map<String, String[]> m ) {
+    private String toStringMap(Map<String, String[]> m) {
         StringBuilder builder = new StringBuilder();
-        m.keySet().forEach( ( k ) -> {
-            builder.append( "Key=" ).append( k )
-                    .append( ", " )
-                    .append( "Value/s=" ).append( Arrays.toString( m.get( k ) ) )
-                    .append( System.lineSeparator() );
-        } );
+        m.keySet().forEach((k) -> {
+            builder.append("Key=").append(k)
+                    .append(", ")
+                    .append("Value/s=").append(Arrays.toString(m.get(k)))
+                    .append(System.lineSeparator());
+        });
         return builder.toString();
     }
 
@@ -80,13 +85,20 @@ public class CommentTableViewJSP extends HttpServlet{
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost( HttpServletRequest req, HttpServletResponse resp )
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log( "POST" );
-        CommentLogic logic = LogicFactory.getFor( "Comment" );
-        Comment account = logic.updateEntity( req.getParameterMap() );
-        logic.update( account );
-        fillTableData( req, resp );
+        log("POST");
+        CommentLogic logic = LogicFactory.getFor("Comment");
+        Comment item = logic.updateEntity(req.getParameterMap());
+        RedditAccountLogic redditLogic = LogicFactory.getFor("RedditAccount");
+        PostLogic pLogic = LogicFactory.getFor("Post");
+        RedditAccount reddit = redditLogic.getWithId(Integer.valueOf(req.getParameter(logic.REDDIT_ACCOUNT_ID)));
+        Post post = pLogic.getWithId(Integer.valueOf(req.getParameter(logic.POST_ID)));
+        item.setRedditAccountId(reddit);
+        item.setPostId(post);
+        logic.update(item);
+        fillTableData(req, resp);
+
     }
 
     /**
@@ -98,10 +110,10 @@ public class CommentTableViewJSP extends HttpServlet{
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet( HttpServletRequest req, HttpServletResponse resp )
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log( "GET" );
-        fillTableData( req, resp );
+        log("GET");
+        fillTableData(req, resp);
     }
 
     /**
@@ -113,10 +125,10 @@ public class CommentTableViewJSP extends HttpServlet{
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPut( HttpServletRequest req, HttpServletResponse resp )
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log( "PUT" );
-        doPost( req, resp );
+        log("PUT");
+        doPost(req, resp);
     }
 
     /**
@@ -128,10 +140,10 @@ public class CommentTableViewJSP extends HttpServlet{
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doDelete( HttpServletRequest req, HttpServletResponse resp )
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log( "DELETE" );
-        doPost( req, resp );
+        log("DELETE");
+        doPost(req, resp);
     }
 
     /**
@@ -146,15 +158,15 @@ public class CommentTableViewJSP extends HttpServlet{
 
     private static final boolean DEBUG = true;
 
-    public void log( String msg ) {
-        if( DEBUG ){
-            String message = String.format( "[%s] %s", getClass().getSimpleName(), msg );
-            getServletContext().log( message );
+    public void log(String msg) {
+        if (DEBUG) {
+            String message = String.format("[%s] %s", getClass().getSimpleName(), msg);
+            getServletContext().log(message);
         }
     }
 
-    public void log( String msg, Throwable t ) {
-        String message = String.format( "[%s] %s", getClass().getSimpleName(), msg );
-        getServletContext().log( message, t );
+    public void log(String msg, Throwable t) {
+        String message = String.format("[%s] %s", getClass().getSimpleName(), msg);
+        getServletContext().log(message, t);
     }
 }

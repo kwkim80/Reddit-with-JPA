@@ -86,8 +86,8 @@ public class CreateRedditAccountJSP extends HttpServlet {
             throws ServletException, IOException {
         log( "POST" );
         RedditAccountLogic logic = LogicFactory.getFor( "RedditAccount" );
-        RedditAccount account = logic.updateEntity( req.getParameterMap() );
-        logic.update( account );
+        RedditAccount item = logic.updateEntity( req.getParameterMap() );
+        logic.update( item );
         fillTableData( req, resp );
     }
 

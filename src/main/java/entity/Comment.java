@@ -33,7 +33,9 @@ import javax.validation.constraints.Size;
     @NamedQuery( name = "Comment.findByPoints", query = "SELECT c FROM Comment c WHERE c.points = :points" ),
     @NamedQuery( name = "Comment.findByReplys", query = "SELECT c FROM Comment c WHERE c.replys = :replys" ),
     @NamedQuery( name = "Comment.findByUniqueId", query = "SELECT c FROM Comment c WHERE c.uniqueId = :uniqueId" ),
-    @NamedQuery( name = "Comment.findByIsReply", query = "SELECT c FROM Comment c WHERE c.isReply = :isReply" ) } )
+    @NamedQuery( name = "Comment.findByIsReply", query = "SELECT c FROM Comment c WHERE c.isReply = :isReply" ),
+    @NamedQuery( name = "Comment.findContaining", query = "SELECT c FROM Comment c WHERE c.text like CONCAT('%', :search, '%') or c.uniqueId like CONCAT('%', :search, '%')" )
+} )
 public class Comment implements Serializable {
 
     @Basic( optional = false )

@@ -7,6 +7,7 @@ package logic;
 
 import common.ValidationException;
 import dal.RedditAccountDAL;
+import entity.Post;
 import entity.RedditAccount;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -146,6 +147,11 @@ public static final String ID = "id";
     
     public List<RedditAccount> getRedditAccountsWithCreated(Date created ){
          return get( () -> dal().findByCreated(created));
+    }
+    
+    @Override
+    public List<RedditAccount> search(String search) {
+        return get(() -> dal().findContaining(search));
     }
    
 }
