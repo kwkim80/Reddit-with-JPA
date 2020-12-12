@@ -23,15 +23,15 @@ import java.util.function.ObjIntConsumer;
 
 public class CommentLogic extends GenericLogic<Comment, CommentDAL> {
 
-    public final String REPLYS = "replys";
-    public final String IS_REPLY = "is_reply";
-    public final String POINTS = "points";
-    public final String CREATED = "created";
-    public final String TEXT = "text";
-    public final String ID = "id";
-    public final String UNIQUE_ID = "unique_id";
-    public final String REDDIT_ACCOUNT_ID = "reddit_account_id";
-    public final String POST_ID = "post_id";
+    public static final String REPLYS = "replys";
+    public static final String IS_REPLY = "is_reply";
+    public static final String POINTS = "points";
+    public static final String CREATED = "created";
+    public static final String TEXT = "text";
+    public static final String ID = "id";
+    public static final String UNIQUE_ID = "unique_id";
+    public static final String REDDIT_ACCOUNT_ID = "reddit_account_id";
+    public static final String POST_ID = "post_id";
 
     CommentLogic() {
         super(new CommentDAL());
