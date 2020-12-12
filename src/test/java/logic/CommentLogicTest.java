@@ -1,19 +1,30 @@
+
     package logic;
 
     import common.TomcatStartUp;
-
-import dal.EMFactory;
-import entity.Comment;
-import java.util.Date;
-import java.util.List;
-import javax.persistence.EntityManager;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+    import common.ValidationException;
+    import dal.EMFactory;
+    import entity.Comment;
+    import entity.Post;
+    import entity.RedditAccount;
+    import java.util.Arrays;
+    import java.util.Date;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.Map;
+    import java.util.Random;
+    import java.util.function.Consumer;
+    import java.util.function.IntFunction;
+    import javax.persistence.EntityManager;
+    import org.junit.jupiter.api.AfterAll;
+    import org.junit.jupiter.api.AfterEach;
+    import static org.junit.jupiter.api.Assertions.assertEquals;
+    import static org.junit.jupiter.api.Assertions.assertNotNull;
+    import static org.junit.jupiter.api.Assertions.assertThrows;
+    import static org.junit.jupiter.api.Assertions.assertTrue;
+    import org.junit.jupiter.api.BeforeAll;
+    import org.junit.jupiter.api.BeforeEach;
+    import org.junit.jupiter.api.Test;
 
     /**
      *
@@ -46,16 +57,16 @@ import org.junit.jupiter.api.Test;
             //we manually make the account to not rely on any logic functionality , just for testing
             Comment entity = new Comment();
             entity.setId(99 );
-            entity.setText("Junit Test Text");
+            entity.setText("test");
             entity.setCreated(new Date(11/11/11));
             entity.setIsReply(true );
-            entity.setPoints(99); 
+            entity.setPoints(99);
             entity.setReplys(99);
-            entity.setUniqueId("J");
-            RedditAccountLogic red = new RedditAccountLogic();
-            entity.setRedditAccountId(red.getWithId(1));
-           PostLogic post = new PostLogic();
-            entity.setPostId(post.getWithId(1));
+            entity.setUniqueId("1");
+      //      RedditCommentLogic red = new RedditCommentLogic();
+            entity.setRedditAccountId(new RedditAccount(1));
+     //      PostLogic post = new PostLogic();
+            entity.setPostId(new Post(1));
 
             //get an instance of EntityManager
             EntityManager em = EMFactory.getEMF().createEntityManager();
@@ -103,7 +114,7 @@ import org.junit.jupiter.api.Test;
          */
         private void assertAccountEquals( Comment expected, Comment actual ) {
             //assert all field to guarantee they are the same
-            assertEquals( expected.getId(), actual.getId() );
+           assertEquals( expected.getId(), actual.getId() );
             assertEquals( expected.getCreated(), actual.getCreated() );
             assertEquals( expected.getIsReply(), actual.getIsReply());
             assertEquals( expected.getPoints(), actual.getPoints());
@@ -153,44 +164,46 @@ import org.junit.jupiter.api.Test;
             assertAccountEquals( expectedEntity, returnedComment.get(0) );
         }
 
-    
-    
-
         @Test
         final void testCreateEntityAndAdd() {
-//            Map<String, String[]> sampleMap = new HashMap<>();
-//            sampleMap.put(CommentLogic.CREATED, new String[]{"20201212"});
-//            sampleMap.put( CommentLogic.IS_REPLY, new String[]{ "true" } );
-//            sampleMap.put( CommentLogic.REPLYS, new String[]{  "1" } );
-//            sampleMap.put( CommentLogic.TEXT, new String[]{ "Test" } );
-//            sampleMap.put(CommentLogic.POINTS, new String[]{"1"});
-//              sampleMap.put( CommentLogic.ID, new String[]{"12"} );
-//            sampleMap.put( CommentLogic.UNIQUE_ID, new String[]{"Test"} );
-//         //   sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{});
-//             //  sampleMap.put(CommentLogic.POST_ID, new String[]{});
-//            Comment returnedAccount = logic.createEntity( sampleMap );
-//            logic.add( returnedAccount );
-//
-//            returnedAccount = logic.getWithId(returnedAccount.getId());
-//
-//            assertEquals( sampleMap.get( CommentLogic.CREATED )[ 0 ], returnedAccount.getCreated());
-//            assertEquals( sampleMap.get( CommentLogic.IS_REPLY )[ 0 ], returnedAccount.getIsReply());
-//            assertEquals( sampleMap.get( CommentLogic.REPLYS )[ 0 ], returnedAccount.getReplys());
-//       assertEquals( sampleMap.get( CommentLogic.TEXT )[ 0 ], returnedAccount.getText());
-//            assertEquals( sampleMap.get( CommentLogic.POINTS )[ 0 ], returnedAccount.getPoints());
-//            logic.delete( returnedAccount );
+            Map<String, String[]> sampleMap = new HashMap<>();
+            sampleMap.put( CommentLogic.CREATED, new String[]{"20201212"});
+            sampleMap.put( CommentLogic.IS_REPLY, new String[]{ "true" } );
+            sampleMap.put( CommentLogic.REPLYS, new String[]{  "1" } );
+            sampleMap.put( CommentLogic.TEXT, new String[]{ "Test" } );
+            sampleMap.put( CommentLogic.POINTS, new String[]{"1"});
+            sampleMap.put( CommentLogic.ID, new String[]{"1"} );
+            sampleMap.put( CommentLogic.UNIQUE_ID, new String[]{"1"} );
+         // sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{});
+         // sampleMap.put(CommentLogic.POST_ID, new String[]{});
+            Comment returnedAccount = logic.createEntity( sampleMap );
+            logic.add( returnedAccount );
+
+            returnedAccount = logic.getWithId(returnedAccount.getId());
+
+            assertEquals( sampleMap.get( CommentLogic.CREATED )[ 0 ], returnedAccount.getCreated());
+            assertEquals( sampleMap.get( CommentLogic.IS_REPLY )[ 0 ], returnedAccount.getIsReply());
+            assertEquals( sampleMap.get( CommentLogic.REPLYS )[ 0 ], returnedAccount.getReplys());
+            assertEquals( sampleMap.get( CommentLogic.TEXT )[ 0 ], returnedAccount.getText());
+            assertEquals( sampleMap.get( CommentLogic.POINTS )[ 0 ], returnedAccount.getPoints());
+            logic.delete( returnedAccount );
         }
-    }
-    /*
+        
         @Test
         final void testCreateEntity() {
-            Map<String, String[]> sampleMap = new HashMap<>();
-            sampleMap.put( AccountLogic.ID, new String[]{ Integer.toString( expectedEntity.getId() ) } );
-            sampleMap.put( AccountLogic.DISPLAYNAME, new String[]{ expectedEntity.getDisplayname() } );
-            sampleMap.put( AccountLogic.USERNAME, new String[]{ expectedEntity.getUsername() } );
-            sampleMap.put( AccountLogic.PASSWORD, new String[]{ expectedEntity.getPassword() } );
-
-            Account returnedAccount = logic.createEntity( sampleMap );
+           Map<String, String[]> sampleMap = new HashMap<>();
+            sampleMap.put( CommentLogic.CREATED, new String[]{"20111111"});
+            sampleMap.put( CommentLogic.IS_REPLY, new String[]{ "true" } );
+            sampleMap.put( CommentLogic.REPLYS, new String[]{  "99" } );
+            sampleMap.put( CommentLogic.TEXT, new String[]{ "Test" } );
+            sampleMap.put( CommentLogic.POINTS, new String[]{"99"});
+            sampleMap.put( CommentLogic.ID, new String[]{"99"} );
+            sampleMap.put( CommentLogic.UNIQUE_ID, new String[]{"99"} );
+            Post post = new Post(1);
+          sampleMap.put( CommentLogic.POST_ID, new String[]{String.valueOf(post.getId())});
+            sampleMap.put( CommentLogic.REDDIT_ACCOUNT_ID, new String[]{"99"} );
+      
+            Comment returnedAccount = logic.createEntity( sampleMap );
 
             assertAccountEquals( expectedEntity, returnedAccount );
         }
@@ -200,48 +213,50 @@ import org.junit.jupiter.api.Test;
             Map<String, String[]> sampleMap = new HashMap<>();
             Consumer<Map<String, String[]>> fillMap = ( Map<String, String[]> map ) -> {
                 map.clear();
-                map.put( AccountLogic.ID, new String[]{ Integer.toString( expectedEntity.getId() ) } );
-                map.put( AccountLogic.DISPLAYNAME, new String[]{ expectedEntity.getDisplayname() } );
-                map.put( AccountLogic.USERNAME, new String[]{ expectedEntity.getUsername() } );
-                map.put( AccountLogic.PASSWORD, new String[]{ expectedEntity.getPassword() } );
+                map.put( CommentLogic.ID, new String[]{ Integer.toString( expectedEntity.getId() ) } );
+                map.put( CommentLogic.CREATED, new String[]{ expectedEntity.getCreated().toString()} );
+                map.put( CommentLogic.REPLYS, new String[]{ Integer.toString(expectedEntity.getReplys())} );
+                map.put( CommentLogic.TEXT, new String[]{ expectedEntity.getText()} );
+           map.put( CommentLogic.POINTS, new String[]{Integer.toString(expectedEntity.getPoints()) } );
+           
             };
 
             //idealy every test should be in its own method
             fillMap.accept( sampleMap );
-            sampleMap.replace( AccountLogic.ID, null );
+            sampleMap.replace( CommentLogic.ID, null );
             assertThrows( NullPointerException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( AccountLogic.ID, new String[]{} );
+            sampleMap.replace( CommentLogic.ID, new String[]{} );
             assertThrows( IndexOutOfBoundsException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
-            sampleMap.replace( AccountLogic.DISPLAYNAME, null );
+            sampleMap.replace( CommentLogic.CREATED, null );
             assertThrows( NullPointerException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( AccountLogic.DISPLAYNAME, new String[]{} );
+            sampleMap.replace( CommentLogic.CREATED, new String[]{} );
             assertThrows( IndexOutOfBoundsException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
-            sampleMap.replace( AccountLogic.USERNAME, null );
+            sampleMap.replace( CommentLogic.TEXT, null );
             assertThrows( NullPointerException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( AccountLogic.USERNAME, new String[]{} );
+            sampleMap.replace( CommentLogic.TEXT, new String[]{} );
             assertThrows( IndexOutOfBoundsException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
-            sampleMap.replace( AccountLogic.PASSWORD, null );
+            sampleMap.replace( CommentLogic.POINTS, null );
             assertThrows( NullPointerException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( AccountLogic.PASSWORD, new String[]{} );
+            sampleMap.replace( CommentLogic.POINTS, new String[]{} );
             assertThrows( IndexOutOfBoundsException.class, () -> logic.createEntity( sampleMap ) );
         }
 
         @Test
         final void testCreateEntityBadLengthValues() {
-            Map<String, String[]> sampleMap = new HashMap<>();
+          Map<String, String[]> sampleMap = new HashMap<>();
             Consumer<Map<String, String[]>> fillMap = ( Map<String, String[]> map ) -> {
                 map.clear();
-                map.put( AccountLogic.ID, new String[]{ Integer.toString( expectedEntity.getId() ) } );
-                map.put( AccountLogic.DISPLAYNAME, new String[]{ expectedEntity.getDisplayname() } );
-                map.put( AccountLogic.USERNAME, new String[]{ expectedEntity.getUsername() } );
-                map.put( AccountLogic.PASSWORD, new String[]{ expectedEntity.getPassword() } );
-            };
+                map.put( CommentLogic.ID, new String[]{ Integer.toString( expectedEntity.getId() ) } );
+                map.put( CommentLogic.CREATED, new String[]{ expectedEntity.getCreated().toString()} );
+                map.put( CommentLogic.REPLYS, new String[]{ Integer.toString(expectedEntity.getReplys())} );
+                map.put( CommentLogic.TEXT, new String[]{ expectedEntity.getText()} );
+           map.put( CommentLogic.POINTS, new String[]{Integer.toString(expectedEntity.getPoints()) } );
 
             IntFunction<String> generateString = ( int length ) -> {
                 //https://www.baeldung.com/java-random-string#java8-alphabetic
@@ -250,33 +265,33 @@ import org.junit.jupiter.api.Test;
                         .collect( StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append )
                         .toString();
             };
-
+            };
             //idealy every test should be in its own method
             fillMap.accept( sampleMap );
-            sampleMap.replace( AccountLogic.ID, new String[]{ "" } );
+            sampleMap.replace( CommentLogic.ID, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( AccountLogic.ID, new String[]{ "12b" } );
-            assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-
-            fillMap.accept( sampleMap );
-            sampleMap.replace( AccountLogic.DISPLAYNAME, new String[]{ "" } );
-            assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( AccountLogic.DISPLAYNAME, new String[]{ generateString.apply( 46 ) } );
+            sampleMap.replace( CommentLogic.ID, new String[]{ "12b" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
-            sampleMap.replace( AccountLogic.USERNAME, new String[]{ "" } );
+            sampleMap.replace( CommentLogic.CREATED, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( AccountLogic.USERNAME, new String[]{ generateString.apply( 46 ) } );
+            sampleMap.replace( CommentLogic.CREATED, new String[]{ String.valueOf(new Date(11/11/1111)) } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
-            sampleMap.replace( AccountLogic.PASSWORD, new String[]{ "" } );
+            sampleMap.replace( CommentLogic.POINTS, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( AccountLogic.PASSWORD, new String[]{ generateString.apply( 46 ) } );
+            sampleMap.replace( CommentLogic.POINTS, new String[]{  } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-        }
 
+            fillMap.accept( sampleMap );
+            sampleMap.replace( CommentLogic.TEXT, new String[]{ "" } );
+            assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
+            sampleMap.replace( CommentLogic.TEXT, new String[]{ "Test" } );
+            assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
+        };
+                    
         @Test
         final void testCreateEntityEdgeValues() {
             IntFunction<String> generateString = ( int length ) -> {
@@ -287,30 +302,30 @@ import org.junit.jupiter.api.Test;
             };
 
             Map<String, String[]> sampleMap = new HashMap<>();
-            sampleMap.put( AccountLogic.ID, new String[]{ Integer.toString( 1 ) } );
-            sampleMap.put( AccountLogic.DISPLAYNAME, new String[]{ generateString.apply( 1 ) } );
-            sampleMap.put( AccountLogic.USERNAME, new String[]{ generateString.apply( 1 ) } );
-            sampleMap.put( AccountLogic.PASSWORD, new String[]{ generateString.apply( 1 ) } );
+            sampleMap.put( CommentLogic.ID, new String[]{ Integer.toString( 1 ) } );
+            sampleMap.put( CommentLogic.CREATED, new String[]{ generateString.apply( 1 ) } );
+            sampleMap.put( CommentLogic.POINTS, new String[]{ generateString.apply( 1 ) } );
+            sampleMap.put( CommentLogic.REPLYS, new String[]{ generateString.apply( 1 ) } );
 
             //idealy every test should be in its own method
-            Account returnedAccount = logic.createEntity( sampleMap );
-            assertEquals( Integer.parseInt( sampleMap.get( AccountLogic.ID )[ 0 ] ), returnedAccount.getId() );
-            assertEquals( sampleMap.get( AccountLogic.DISPLAYNAME )[ 0 ], returnedAccount.getDisplayname() );
-            assertEquals( sampleMap.get( AccountLogic.USERNAME )[ 0 ], returnedAccount.getUsername() );
-            assertEquals( sampleMap.get( AccountLogic.PASSWORD )[ 0 ], returnedAccount.getPassword() );
+            Comment returnedAccount = logic.createEntity( sampleMap );
+            assertEquals( Integer.parseInt( sampleMap.get( CommentLogic.ID )[ 0 ] ), returnedAccount.getId() );
+            assertEquals( sampleMap.get( CommentLogic.CREATED )[ 0 ], returnedAccount.getCreated());
+            assertEquals( sampleMap.get( CommentLogic.POINTS )[ 0 ], returnedAccount.getPoints());
+            assertEquals( sampleMap.get( CommentLogic.TEXT )[ 0 ], returnedAccount.getText());
 
             sampleMap = new HashMap<>();
-            sampleMap.put( AccountLogic.ID, new String[]{ Integer.toString( 1 ) } );
-            sampleMap.put( AccountLogic.DISPLAYNAME, new String[]{ generateString.apply( 45 ) } );
-            sampleMap.put( AccountLogic.USERNAME, new String[]{ generateString.apply( 45 ) } );
-            sampleMap.put( AccountLogic.PASSWORD, new String[]{ generateString.apply( 45 ) } );
+            sampleMap.put( CommentLogic.ID, new String[]{ Integer.toString( 1 ) } );
+            sampleMap.put( CommentLogic.CREATED, new String[]{ generateString.apply( 45 ) } );
+            sampleMap.put( CommentLogic.POINTS, new String[]{ generateString.apply( 45 ) } );
+            sampleMap.put( CommentLogic.TEXT, new String[]{ generateString.apply( 45 ) } );
 
             //idealy every test should be in its own method
             returnedAccount = logic.createEntity( sampleMap );
-            assertEquals( Integer.parseInt( sampleMap.get( AccountLogic.ID )[ 0 ] ), returnedAccount.getId() );
-            assertEquals( sampleMap.get( AccountLogic.DISPLAYNAME )[ 0 ], returnedAccount.getDisplayname() );
-            assertEquals( sampleMap.get( AccountLogic.USERNAME )[ 0 ], returnedAccount.getUsername() );
-            assertEquals( sampleMap.get( AccountLogic.PASSWORD )[ 0 ], returnedAccount.getPassword() );
+            assertEquals( Integer.parseInt( sampleMap.get( CommentLogic.ID )[ 0 ] ), returnedAccount.getId() );
+            assertEquals( sampleMap.get( CommentLogic.CREATED )[ 0 ], returnedAccount.getCreated());
+            assertEquals( sampleMap.get( CommentLogic.REPLYS )[ 0 ], returnedAccount.getReplys());
+            assertEquals( sampleMap.get( CommentLogic.TEXT )[ 0 ], returnedAccount.getText());
         }
 
         @Test
@@ -322,16 +337,16 @@ import org.junit.jupiter.api.Test;
         @Test
         final void testGetColumnCodes() {
             List<String> list = logic.getColumnCodes();
-            assertEquals( Arrays.asList( AccountLogic.ID, AccountLogic.DISPLAYNAME, AccountLogic.USERNAME, AccountLogic.PASSWORD ), list );
+            assertEquals( Arrays.asList( CommentLogic.ID, CommentLogic.CREATED, CommentLogic.POINTS, CommentLogic.REPLYS ), list );
         }
 
         @Test
         final void testExtractDataAsList() {
             List<?> list = logic.extractDataAsList( expectedEntity );
             assertEquals( expectedEntity.getId(), list.get( 0 ) );
-            assertEquals( expectedEntity.getDisplayname(), list.get( 1 ) );
-            assertEquals( expectedEntity.getUsername(), list.get( 2 ) );
-            assertEquals( expectedEntity.getPassword(), list.get( 3 ) );
+            assertEquals( expectedEntity.getCreated(), list.get( 1 ) );
+            assertEquals( expectedEntity.getPoints(), list.get( 2 ) );
+            assertEquals( expectedEntity.getReplys(), list.get( 3 ) );
         }
     }
-}*/
+
