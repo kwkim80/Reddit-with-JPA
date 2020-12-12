@@ -273,19 +273,19 @@ import entity.Subreddit;
             fillMap.accept( sampleMap );
             sampleMap.replace( PostLogic.CREATED, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( PostLogic.CREATED, new String[]{ generateString.apply( 46 ) } );
+            sampleMap.replace( PostLogic.CREATED, new String[]{ "20111111" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
             sampleMap.replace( PostLogic.POINTS, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( PostLogic.POINTS, new String[]{ generateString.apply( 46 ) } );
+            sampleMap.replace( PostLogic.POINTS, new String[]{ "1" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
             sampleMap.replace( PostLogic.COMMENT_COUNT, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( PostLogic.COMMENT_COUNT, new String[]{ generateString.apply( 46 ) } );
+            sampleMap.replace( PostLogic.COMMENT_COUNT, new String[]{ "13" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
         };
                     

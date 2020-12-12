@@ -275,19 +275,19 @@
             fillMap.accept( sampleMap );
             sampleMap.replace( CommentLogic.CREATED, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( CommentLogic.CREATED, new String[]{ generateString.apply( 46 ) } );
+            sampleMap.replace( CommentLogic.CREATED, new String[]{ String.valueOf(new Date(11/11/1111)) } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
             sampleMap.replace( CommentLogic.POINTS, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( CommentLogic.POINTS, new String[]{ generateString.apply( 46 ) } );
+            sampleMap.replace( CommentLogic.POINTS, new String[]{  } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
             sampleMap.replace( CommentLogic.TEXT, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( CommentLogic.TEXT, new String[]{ generateString.apply( 46 ) } );
+            sampleMap.replace( CommentLogic.TEXT, new String[]{ "Test" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
         };
                     
