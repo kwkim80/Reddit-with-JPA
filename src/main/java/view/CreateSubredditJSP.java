@@ -34,7 +34,7 @@ public class CreateSubredditJSP extends HttpServlet{
         req.setAttribute( "request", toStringMap( req.getParameterMap() ) );
         req.setAttribute( "path", path );
         req.setAttribute( "title", path.substring( 1 ) );
-        req.getRequestDispatcher( "/jsp/ShowTable-Subreddit.jsp" ).forward( req, resp );
+        req.getRequestDispatcher( "/jsp/Input-Subreddit.jsp" ).forward( req, resp );
     }
 
     private List<?> extractTableData( HttpServletRequest req ) {

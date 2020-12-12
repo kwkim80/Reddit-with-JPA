@@ -32,7 +32,8 @@ import javax.validation.constraints.Size;
     @NamedQuery( name = "RedditAccount.findByName", query = "SELECT r FROM RedditAccount r WHERE r.name = :name" ),
     @NamedQuery( name = "RedditAccount.findByLinkPoints", query = "SELECT r FROM RedditAccount r WHERE r.linkPoints = :linkPoints" ),
     @NamedQuery( name = "RedditAccount.findByCommentPoints", query = "SELECT r FROM RedditAccount r WHERE r.commentPoints = :commentPoints" ),
-    @NamedQuery( name = "RedditAccount.findByCreated", query = "SELECT r FROM RedditAccount r WHERE r.created = :created" ) } )
+    @NamedQuery( name = "RedditAccount.findByCreated", query = "SELECT r FROM RedditAccount r WHERE r.created = :created" ),
+    @NamedQuery( name = "RedditAccount.findContaining", query = "SELECT r FROM RedditAccount r WHERE r.name like CONCAT('%', :search, '%')" )} )
 public class RedditAccount implements Serializable {
 
     @Basic( optional = false )

@@ -59,4 +59,10 @@ public class PostDAL extends GenericDAL<Post>  {
         map.put( "id", id );
         return findResults( "Post.findByAuthor", map );
     }
+    
+     public List<Post> findContaining( String search ) {
+        Map<String, Object> map = new HashMap<>();
+        map.put( "search", search );
+        return findResults( "Post.findContaining", map );
+    }
 }

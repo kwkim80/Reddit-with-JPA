@@ -56,4 +56,10 @@ public class RedditAccountDAL extends GenericDAL<RedditAccount>  {
             map.put( "created", created );
             return findResults( "RedditAccount.findByCreated", map );
 	}
+        
+        public List<RedditAccount> findContaining( String search ) {
+        Map<String, Object> map = new HashMap<>();
+        map.put( "search", search );
+        return findResults( "RedditAccount.findContaining", map );
+    }
 }

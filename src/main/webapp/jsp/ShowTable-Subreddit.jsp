@@ -1,7 +1,7 @@
 <%-- 
     Document   : ShowTable-Subreddit
     Created on : Dec. 11, 2020, 12:12:34 a.m.
-    Author     : kw244
+    Author     : kiwoong kim
 --%>
 
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>

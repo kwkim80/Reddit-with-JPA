@@ -133,5 +133,10 @@ public class SubredditLogic extends GenericLogic <Subreddit, SubredditDAL>{
     public List<?> extractDataAsList(Subreddit e) {
         return Arrays.asList( e.getId(), e.getName(), e.getUrl(), e.getSubscribers());   
     }
+    
+    @Override
+    public List<Subreddit> search(String search) {
+        return get(() -> dal().findContaining(search));
+    }
 
 }
