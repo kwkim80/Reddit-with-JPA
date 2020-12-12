@@ -21,11 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+/*
 /**
  *
  * @author Shariar
  */
+
 class AccountLogicTest {
 
     private AccountLogic logic;
@@ -344,4 +345,4 @@ class AccountLogicTest {
         assertEquals( expectedEntity.getUsername(), list.get( 2 ) );
         assertEquals( expectedEntity.getPassword(), list.get( 3 ) );
     }
-}
+}  
