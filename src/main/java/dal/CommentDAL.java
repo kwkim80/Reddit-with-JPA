@@ -39,7 +39,7 @@ public class CommentDAL extends GenericDAL<Comment>{
         map.put("text", text);
         return findResults("Comment.findByText", map);
     }
-    
+
     public List<Comment> findByCreated(Date created){
               HashMap<String, Object> map = new HashMap<>();
         map.put("created", created);
