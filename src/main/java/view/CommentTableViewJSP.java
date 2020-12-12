@@ -88,17 +88,24 @@ public class CommentTableViewJSP extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         log("POST");
-        CommentLogic logic = LogicFactory.getFor("Comment");
-        Comment item = logic.updateEntity(req.getParameterMap());
-        RedditAccountLogic redditLogic = LogicFactory.getFor("RedditAccount");
-        PostLogic pLogic = LogicFactory.getFor("Post");
-        RedditAccount reddit = redditLogic.getWithId(Integer.valueOf(req.getParameter(logic.REDDIT_ACCOUNT_ID)));
-        Post post = pLogic.getWithId(Integer.valueOf(req.getParameter(logic.POST_ID)));
-        item.setRedditAccountId(reddit);
-        item.setPostId(post);
-        logic.update(item);
-        fillTableData(req, resp);
 
+        CommentLogic logic = LogicFactory.getFor("Comment");
+        if (req.getParameter("delete") == null) {
+            Comment item = logic.updateEntity(req.getParameterMap());
+            RedditAccountLogic redditLogic = LogicFactory.getFor("RedditAccount");
+            PostLogic pLogic = LogicFactory.getFor("Post");
+            RedditAccount reddit = redditLogic.getWithId(Integer.valueOf(req.getParameter(logic.REDDIT_ACCOUNT_ID)));
+            Post post = pLogic.getWithId(Integer.valueOf(req.getParameter(logic.POST_ID)));
+            item.setRedditAccountId(reddit);
+            item.setPostId(post);
+            logic.update(item);
+        } else if (req.getParameter("deleteMark") != null) {
+            int id = Integer.valueOf(req.getParameter("deleteMark"));
+
+            Comment item = logic.getWithId(id);
+            logic.delete(item);
+        }
+        fillTableData(req, resp);
     }
 
     /**

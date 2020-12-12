@@ -25,49 +25,50 @@ import logic.RedditAccountLogic;
  *
  * @author Jiyeon Choi
  */
-@WebServlet( name = "RedditAccountTableJSP", urlPatterns = { "/RedditAccountTableJSP" } )
+@WebServlet(name = "RedditAccountTableJSP", urlPatterns = {"/RedditAccountTableJSP"})
 public class RedditAccountTableViewJSP extends HttpServlet {
-        private void fillTableData( HttpServletRequest req, HttpServletResponse resp )
+
+    private void fillTableData(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String path = req.getServletPath();
-        req.setAttribute( "entities", extractTableData( req ) );
-        req.setAttribute( "request", toStringMap( req.getParameterMap() ) );
-        req.setAttribute( "path", path );
-        req.setAttribute( "title", path.substring( 1 ) );
-        req.getRequestDispatcher( "/jsp/ShowTable-RedditAccount.jsp" ).forward( req, resp );
+        req.setAttribute("entities", extractTableData(req));
+        req.setAttribute("request", toStringMap(req.getParameterMap()));
+        req.setAttribute("path", path);
+        req.setAttribute("title", path.substring(1));
+        req.getRequestDispatcher("/jsp/ShowTable-RedditAccount.jsp").forward(req, resp);
     }
 
-    private List<?> extractTableData( HttpServletRequest req ) {
-        String search = req.getParameter( "searchText" );
-        RedditAccountLogic logic = LogicFactory.getFor( "RedditAccount" );
-        req.setAttribute( "columnName", logic.getColumnNames() );
-        req.setAttribute( "columnCode", logic.getColumnCodes() );
+    private List<?> extractTableData(HttpServletRequest req) {
+        String search = req.getParameter("searchText");
+        RedditAccountLogic logic = LogicFactory.getFor("RedditAccount");
+        req.setAttribute("columnName", logic.getColumnNames());
+        req.setAttribute("columnCode", logic.getColumnCodes());
         List<RedditAccount> list;
-        if( search != null ){
-            list = logic.search( search );
+        if (search != null) {
+            list = logic.search(search);
         } else {
             list = logic.getAll();
         }
-        if( list == null || list.isEmpty() ){
+        if (list == null || list.isEmpty()) {
             return Collections.emptyList();
         }
-        return appendDatatoNewList( list, logic::extractDataAsList );
+        return appendDatatoNewList(list, logic::extractDataAsList);
     }
 
-    private <T> List<?> appendDatatoNewList( List<T> list, Function<T, List<?>> toArray ) {
-        List<List<?>> newlist = new ArrayList<>( list.size() );
-        list.forEach( i -> newlist.add( toArray.apply( i ) ) );
+    private <T> List<?> appendDatatoNewList(List<T> list, Function<T, List<?>> toArray) {
+        List<List<?>> newlist = new ArrayList<>(list.size());
+        list.forEach(i -> newlist.add(toArray.apply(i)));
         return newlist;
     }
 
-    private String toStringMap( Map<String, String[]> m ) {
+    private String toStringMap(Map<String, String[]> m) {
         StringBuilder builder = new StringBuilder();
-        m.keySet().forEach( ( k ) -> {
-            builder.append( "Key=" ).append( k )
-                    .append( ", " )
-                    .append( "Value/s=" ).append( Arrays.toString( m.get( k ) ) )
-                    .append( System.lineSeparator() );
-        } );
+        m.keySet().forEach((k) -> {
+            builder.append("Key=").append(k)
+                    .append(", ")
+                    .append("Value/s=").append(Arrays.toString(m.get(k)))
+                    .append(System.lineSeparator());
+        });
         return builder.toString();
     }
 
@@ -80,13 +81,21 @@ public class RedditAccountTableViewJSP extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost( HttpServletRequest req, HttpServletResponse resp )
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log( "POST" );
-        RedditAccountLogic logic = LogicFactory.getFor( "RedditAccount" );
-        RedditAccount account = logic.updateEntity( req.getParameterMap() );
-        logic.update( account );
-        fillTableData( req, resp );
+        log("POST");
+
+        RedditAccountLogic logic = LogicFactory.getFor("RedditAccount");
+        if (req.getParameter("delete") == null) {
+            RedditAccount account = logic.updateEntity(req.getParameterMap());
+            logic.update(account);
+        } else if (req.getParameter("deleteMark") != null) {
+            int id = Integer.valueOf(req.getParameter("deleteMark"));
+
+            RedditAccount item = logic.getWithId(id);
+            logic.delete(item);
+        }
+        fillTableData(req, resp);
     }
 
     /**
@@ -98,10 +107,10 @@ public class RedditAccountTableViewJSP extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet( HttpServletRequest req, HttpServletResponse resp )
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log( "GET" );
-        fillTableData( req, resp );
+        log("GET");
+        fillTableData(req, resp);
     }
 
     /**
@@ -113,10 +122,10 @@ public class RedditAccountTableViewJSP extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPut( HttpServletRequest req, HttpServletResponse resp )
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log( "PUT" );
-        doPost( req, resp );
+        log("PUT");
+        doPost(req, resp);
     }
 
     /**
@@ -128,10 +137,10 @@ public class RedditAccountTableViewJSP extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doDelete( HttpServletRequest req, HttpServletResponse resp )
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log( "DELETE" );
-        doPost( req, resp );
+        log("DELETE");
+        doPost(req, resp);
     }
 
     /**
@@ -146,15 +155,15 @@ public class RedditAccountTableViewJSP extends HttpServlet {
 
     private static final boolean DEBUG = true;
 
-    public void log( String msg ) {
-        if( DEBUG ){
-            String message = String.format( "[%s] %s", getClass().getSimpleName(), msg );
-            getServletContext().log( message );
+    public void log(String msg) {
+        if (DEBUG) {
+            String message = String.format("[%s] %s", getClass().getSimpleName(), msg);
+            getServletContext().log(message);
         }
     }
 
-    public void log( String msg, Throwable t ) {
-        String message = String.format( "[%s] %s", getClass().getSimpleName(), msg );
-        getServletContext().log( message, t );
+    public void log(String msg, Throwable t) {
+        String message = String.format("[%s] %s", getClass().getSimpleName(), msg);
+        getServletContext().log(message, t);
     }
 }

@@ -101,7 +101,6 @@ public class CreateCommentJSP extends HttpServlet {
                 item.setRedditAccountId(reddit);
                 item.setPostId(post);
                 logic.update(item);
-                fillTableData(req, resp);
                 errorMessage = "";
             } catch (Exception ex) {
                 errorMessage = ex.getMessage();

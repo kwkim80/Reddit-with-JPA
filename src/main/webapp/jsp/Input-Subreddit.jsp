@@ -28,18 +28,16 @@
                     <form method="post">
 
                         <c:forEach var="code" items="${columnCode}">
-                            <c:if test = "${code!='id'}">
-                                <label for="field2"><span>${code.substring(0, 1).toUpperCase()}${code.substring(1)} <span class="required">*</span></span><input type="text" class="input-field" name="${code}" value="" /></label>
-                                </c:if>
+                            <c:choose >
+                                <c:when test = "${code=='created'}">
+                                    <label for="field2"><span>${code.substring(0, 1).toUpperCase()}${code.substring(1)} <span class="required">*</span></span><input type="text" class="input-field" name="${code}" placeholder="${nowDate}" value="" /></label>
+                                    </c:when>
+                                    <c:when test = "${code!='id'}">
+                                    <label for="field2"><span>${code.substring(0, 1).toUpperCase()}${code.substring(1)} <span class="required">*</span></span><input type="text" class="input-field" name="${code}" value="" /></label>
+                                    </c:when>
+                                </c:choose>
                             </c:forEach>
 
-                        <!--                       
-                                                <label for="field2"><span>Unique_ID <span class="required">*</span></span><input type="text" class="input-field" name="unique_id" value="" /></label>
-                                                <label for="field2"><span>Reddit_Account_ID <span class="required">*</span></span><input type="text" class="input-field" name="reddit_account_id" value="" /></label>
-                                                <label for="field2"><span>Subreddit_ID <span class="required">*</span></span><input type="text" class="input-field" name="subreddit_id" value="" /></label>
-                                                <label for="field2"><span>Comment_Count <span class="required">*</span></span><input type="text" class="input-field" name="comment_count" value="" /></label>
-                                                <label for="field2"><span>Points <span class="required">*</span></span><input type="text" class="input-field" name="points" value="" /></label>
-                                                <label for="field2"><span>Created <span class="required">*</span></span><input type="text" class="input-field" name="created" value="" /></label>-->
                         <label><input type="submit" name="add"  value="Add" /> <input type="submit" name="view" value="Add and View" /></label>
                         <!--                        <label><span> </span></label>-->
 
@@ -62,8 +60,8 @@
         <form method="post">
             <table border="1">
                 <tr>
-                    
-                        <c:forEach var="name" items="${columnName}">
+
+                    <c:forEach var="name" items="${columnName}">
                         <th>${name}</th>
                         </c:forEach>
                 </tr>
@@ -71,16 +69,16 @@
                 <c:forEach var="entity" items="${entities}">
                     <tr>
                         <c:set var="counter" value="${counter+1}"/>
-                        
-                            <c:forEach var="data" items="${entity}">
-                                <c:set var="counter" value="${counter+1}"/>
+
+                        <c:forEach var="data" items="${entity}">
+                            <c:set var="counter" value="${counter+1}"/>
                             <td class="name" id="${counter}" >${data}</td>
                         </c:forEach>
                     </tr>
                 </c:forEach>
                 <tr>
-                   
-                        <c:forEach var="name" items="${columnName}">
+
+                    <c:forEach var="name" items="${columnName}">
                         <th>${name}</th>
                         </c:forEach>
                 </tr>

@@ -30,7 +30,7 @@
             function convertCellToInput( id, readOnly, name){
                 var idCell = document.getElementById(id);
                 var idInput = createTextInput(idCell.innerText, name);
-                idInput.readOnly = readOnly;
+                idInput.readOnly = (name==="id")?true:readOnly;
                 idCell.innerText = null;
                 idCell.appendChild(idInput);
             }

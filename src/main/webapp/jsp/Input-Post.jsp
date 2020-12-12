@@ -10,6 +10,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:useBean id="toDay" class="java.util.Date" />
+<c:set var="nowDate"><fmt:formatDate value="${toDay}" pattern="yyyyMMdd" /></c:set> 
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,10 +30,15 @@
                     <form method="post">
 
                         <c:forEach var="code" items="${columnCode}">
-                            <c:if test = "${code!='id'}">
+                           <c:choose >
+                                 <c:when test = "${code=='created'}">
+                                     <label for="field2"><span>${code.substring(0, 1).toUpperCase()}${code.substring(1)} <span class="required">*</span></span><input type="text" class="input-field" name="${code}" placeholder="${nowDate}" value="" /></label>
+                                </c:when>
+                                <c:when test = "${code!='id'}">
                                 <label for="field2"><span>${code.substring(0, 1).toUpperCase()}${code.substring(1)} <span class="required">*</span></span><input type="text" class="input-field" name="${code}" value="" /></label>
-                                </c:if>
-                            </c:forEach>
+                                </c:when>
+                            </c:choose>
+                        </c:forEach>
 
                         <!--                       
                                                 <label for="field2"><span>Unique_ID <span class="required">*</span></span><input type="text" class="input-field" name="unique_id" value="" /></label>
