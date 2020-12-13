@@ -30,5 +30,12 @@ public  class Utility {
        return strNow;
        
     }
+    
+    public static boolean IsDateEqual(Date d1, Date d2){
+            long timeInMilliSeconds1 = d1.getTime();
+            long timeInMilliSeconds2 = d2.getTime();
+            long errorRangeInMilliSeconds = 10000;//10 seconds
+            return Math.abs( timeInMilliSeconds1 - timeInMilliSeconds2 ) < errorRangeInMilliSeconds;
+    }
 
 }
