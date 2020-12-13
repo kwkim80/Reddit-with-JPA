@@ -5,10 +5,15 @@
  */
 package common;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Random;
+import java.util.function.IntFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,5 +42,24 @@ public  class Utility {
             long errorRangeInMilliSeconds = 10000;//10 seconds
             return Math.abs( timeInMilliSeconds1 - timeInMilliSeconds2 ) < errorRangeInMilliSeconds;
     }
-
+    
+//    public static boolean IsDateEqual(String d1, Date d2){
+//           
+//        try {
+//           Date date1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss").parse(d1);
+//            long timeInMilliSeconds1 = date1.getTime();
+//            long timeInMilliSeconds2 = d2.getTime();
+//            long errorRangeInMilliSeconds = 10000;//10 seconds
+//            return Math.abs( timeInMilliSeconds1 - timeInMilliSeconds2 ) < errorRangeInMilliSeconds;
+//        } catch (ParseException ex) {
+//            return false;
+//        }
+//           
+//    }
+    public static String generateString( int length ) {
+                    //https://www.baeldung.com/java-random-string#java8-alphabetic
+                    return new Random().ints( 'a', 'z' + 1 ).limit( length )
+                            .collect( StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append )
+                            .toString();
+    };
 }

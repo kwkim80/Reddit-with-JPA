@@ -63,15 +63,15 @@ import java.time.Instant;
             //we only do this for the test.
             //always create Entity using logic.
             //we manually make the account to not rely on any logic functionality , just for testing
-            String uniqueKey=Long.toString(new Date().getTime()).substring(0, 9);
+            //String uniqueKey=Long.toString(new Date().getTime()).substring(0, 9);
             Post entity = new Post();
             entity.setCommentCount(1);
-            entity.setUniqueId("test");
+            //entity.setUniqueId("test");
             entity.setCreated(Date.from(Instant.now(Clock.systemDefaultZone())));
             entity.setPoints(99);
             entity.setTitle("Junit");
           
-            entity.setUniqueId(uniqueKey);
+            entity.setUniqueId(Utility.generateString(9));
             entity.setRedditAccountId(rLogic.getWithId(1));
             entity.setSubredditId(sLogic.getWithId(1));
 
@@ -202,7 +202,7 @@ import java.time.Instant;
             sampleMap.put( PostLogic.COMMENT_COUNT, new String[]{ Integer.toString( expectedEntity.getCommentCount()) } );
             sampleMap.put( PostLogic.TITLE, new String[]{ expectedEntity.getTitle() } );
             sampleMap.put( PostLogic.POINTS, new String[]{Integer.toString(expectedEntity.getPoints())});
-            sampleMap.put( PostLogic.UNIQUE_ID, new String[]{expectedEntity.getUniqueID()+"2"} );
+            sampleMap.put( PostLogic.UNIQUE_ID, new String[]{Utility.generateString(9)} );
             //sampleMap.put( PostLogic.ID, new String[]{ Integer.toString( expectedEntity.getId() ) } );
          // sampleMap.put(PostLogic.REDDIT_ACCOUNT_ID, new String[]{});
          // sampleMap.put(PostLogic.POST_ID, new String[]{});
@@ -273,6 +273,12 @@ import java.time.Instant;
             assertThrows( NullPointerException.class, () -> logic.createEntity( sampleMap ) );
             sampleMap.replace( PostLogic.POINTS, new String[]{} );
             assertThrows( IndexOutOfBoundsException.class, () -> logic.createEntity( sampleMap ) );
+            
+             fillMap.accept( sampleMap );
+            sampleMap.replace( PostLogic.TITLE, null );
+            assertThrows( NullPointerException.class, () -> logic.createEntity( sampleMap ) );
+            sampleMap.replace( PostLogic.TITLE, new String[]{ "" } );
+            assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
         }
 
         @Test

@@ -156,6 +156,10 @@ public class LoadDataView extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * 
+     * We make a little flow. First , We try to get post data from the Reddit API.
+     * And then, we show the post list.
+     * If you want to save the post list, you can save the list by clicking 'ADD' or 'Add and View' button.
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
