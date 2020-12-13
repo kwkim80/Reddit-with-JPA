@@ -54,11 +54,18 @@
             //we only do this for the test.
             //always create Entity using logic.
             //we manually make the account to not rely on any logic functionality , just for testing
+            IntFunction<String> generateString = ( int length ) -> {
+                //https://www.baeldung.com/java-random-string#java8-alphabetic
+                //from 97 inclusive to 123 exclusive
+                return new Random().ints( 'a', 'z' + 1 ).limit( length )
+                        .collect( StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append )
+                        .toString();
+            };
+            
             Subreddit entity = new Subreddit();
-            entity.setId(99 );
             entity.setSubscribers(1);
-            entity.setName("Junit");
-            entity.setUrl("www" );
+            entity.setName(generateString.apply(10));
+            entity.setUrl(generateString.apply(20) );
 
 
             //get an instance of EntityManager
@@ -140,42 +147,45 @@
         }
         
                 @Test
-        final void testGetSubredditWithReply() {
+        final void testSubredditsWithSubscribers() {
           List< Subreddit> returnedSubreddit = logic.getSubredditsWithSubscribers(expectedEntity.getSubscribers());
 
-            //the two accounts (testAcounts and returnedAccounts) must be the same
-            assertAccountEquals( expectedEntity, returnedSubreddit.get(0) );
+             for( Subreddit sub : returnedSubreddit) {   
+                assertEquals(sub.getSubscribers(),expectedEntity.getSubscribers()); 
+            }
         }
 
 
         @Test
         final void testCreateEntityAndAdd() {
             Map<String, String[]> sampleMap = new HashMap<>();
-            sampleMap.put( SubredditLogic.ID, new String[]{"1"});
-            sampleMap.put( SubredditLogic.NAME, new String[]{ "Junit" } );
-            sampleMap.put( SubredditLogic.SUBSCRIBERS, new String[]{  "1" } );
-            sampleMap.put( SubredditLogic.URL, new String[]{ "www" } );
+            IntFunction<String> generateString = ( int length ) -> {
+                //https://www.baeldung.com/java-random-string#java8-alphabetic
+                //from 97 inclusive to 123 exclusive
+                return new Random().ints( 'a', 'z' + 1 ).limit( length )
+                        .collect( StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append )
+                        .toString();
+            };
+            sampleMap.put( SubredditLogic.NAME, new String[]{ generateString.apply(10) } );
+            sampleMap.put( SubredditLogic.SUBSCRIBERS, new String[]{ Integer.toString(expectedEntity.getSubscribers()) } );
+            sampleMap.put( SubredditLogic.URL, new String[]{ generateString.apply(20) } );
  
-            Subreddit returnedAccount = logic.createEntity( sampleMap );
-            logic.add( returnedAccount );
+            Subreddit newItem = logic.createEntity( sampleMap );
+            logic.add( newItem );
 
-            returnedAccount = logic.getWithId(returnedAccount.getId());
+            Subreddit savedItem = logic.getWithId(newItem.getId());
 
-            assertEquals( sampleMap.get( SubredditLogic.ID )[ 0 ], returnedAccount.getId());
-            assertEquals( sampleMap.get( SubredditLogic.NAME )[ 0 ], returnedAccount.getName());
-            assertEquals( sampleMap.get( SubredditLogic.SUBSCRIBERS )[ 0 ], returnedAccount.getSubscribers());
-            assertEquals( sampleMap.get( SubredditLogic.URL )[ 0 ], returnedAccount.getUrl());
-            logic.delete( returnedAccount );
+            assertAccountEquals(newItem, savedItem);
+            logic.delete( savedItem );
         }
         
         @Test
         final void testCreateEntity() {
            Map<String, String[]> sampleMap = new HashMap<>();
-            sampleMap.put( SubredditLogic.ID, new String[]{"1"});
-            sampleMap.put( SubredditLogic.NAME, new String[]{ "Junit" } );
-            sampleMap.put( SubredditLogic.SUBSCRIBERS, new String[]{  "99" } );
-            sampleMap.put( SubredditLogic.URL, new String[]{ "www" } );
-      
+            sampleMap.put( SubredditLogic.ID, new String[]{ Integer.toString( expectedEntity.getId() ) });
+            sampleMap.put( SubredditLogic.NAME, new String[]{ expectedEntity.getName() } );
+            sampleMap.put( SubredditLogic.SUBSCRIBERS, new String[]{ Integer.toString( expectedEntity.getSubscribers()) } );
+            sampleMap.put( SubredditLogic.URL, new String[]{ expectedEntity.getUrl() } );
             Subreddit returnedAccount = logic.createEntity( sampleMap );
 
             assertAccountEquals( expectedEntity, returnedAccount );
@@ -230,7 +240,7 @@
                 map.put( SubredditLogic.SUBSCRIBERS, new String[]{ Integer.toString(expectedEntity.getSubscribers())} );
                 map.put( SubredditLogic.URL, new String[]{ expectedEntity.getUrl()} );
 
-
+            };
             IntFunction<String> generateString = ( int length ) -> {
                 //https://www.baeldung.com/java-random-string#java8-alphabetic
                 //from 97 inclusive to 123 exclusive
@@ -238,7 +248,7 @@
                         .collect( StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append )
                         .toString();
             };
-            };
+         
             //idealy every test should be in its own method
             fillMap.accept( sampleMap );
             sampleMap.replace( SubredditLogic.ID, new String[]{ "" } );
@@ -249,19 +259,19 @@
             fillMap.accept( sampleMap );
             sampleMap.replace( SubredditLogic.NAME, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( SubredditLogic.NAME, new String[]{ String.valueOf(new Date(11/11/1111)) } );
+            sampleMap.replace( SubredditLogic.NAME, new String[]{ String.valueOf(generateString.apply(101)) } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
             sampleMap.replace( SubredditLogic.SUBSCRIBERS, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( SubredditLogic.SUBSCRIBERS, new String[]{  } );
+            sampleMap.replace( SubredditLogic.SUBSCRIBERS, new String[]{ "12b" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
 
             fillMap.accept( sampleMap );
             sampleMap.replace( SubredditLogic.URL, new String[]{ "" } );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
-            sampleMap.replace( SubredditLogic.URL, new String[]{ "Test" } );
+            sampleMap.replace( SubredditLogic.URL, new String[]{ generateString.apply(256)} );
             assertThrows( ValidationException.class, () -> logic.createEntity( sampleMap ) );
         };
                     
@@ -277,40 +287,41 @@
             Map<String, String[]> sampleMap = new HashMap<>();
             sampleMap.put( SubredditLogic.ID, new String[]{ Integer.toString( 1 ) } );
             sampleMap.put( SubredditLogic.NAME, new String[]{ generateString.apply( 1 ) } );
-            sampleMap.put( SubredditLogic.SUBSCRIBERS, new String[]{ generateString.apply( 1 ) } );
+            sampleMap.put( SubredditLogic.SUBSCRIBERS, new String[]{ Integer.toString(1) } );
             sampleMap.put( SubredditLogic.URL, new String[]{ generateString.apply( 1 ) } );
 
             //idealy every test should be in its own method
             Subreddit returnedAccount = logic.createEntity( sampleMap );
+            
             assertEquals( Integer.parseInt( sampleMap.get( SubredditLogic.ID )[ 0 ] ), returnedAccount.getId() );
             assertEquals( sampleMap.get( SubredditLogic.NAME )[ 0 ], returnedAccount.getName());
-            assertEquals( sampleMap.get( SubredditLogic.SUBSCRIBERS )[ 0 ], returnedAccount.getSubscribers());
+            assertEquals( sampleMap.get( SubredditLogic.SUBSCRIBERS )[ 0 ], Integer.toString(returnedAccount.getSubscribers()));
             assertEquals( sampleMap.get( SubredditLogic.URL )[ 0 ], returnedAccount.getUrl());
 
             sampleMap = new HashMap<>();
             sampleMap.put( SubredditLogic.ID, new String[]{ Integer.toString( 1 ) } );
-            sampleMap.put( SubredditLogic.NAME, new String[]{ generateString.apply( 45 ) } );
-            sampleMap.put( SubredditLogic.SUBSCRIBERS, new String[]{ generateString.apply( 45 ) } );
-            sampleMap.put( SubredditLogic.URL, new String[]{ generateString.apply( 45 ) } );
+            sampleMap.put( SubredditLogic.NAME, new String[]{ generateString.apply( 100 ) } );
+            sampleMap.put( SubredditLogic.SUBSCRIBERS, new String[]{ Integer.toString( 1 ) } );
+            sampleMap.put( SubredditLogic.URL, new String[]{ generateString.apply( 255 ) } );
 
             //idealy every test should be in its own method
             returnedAccount = logic.createEntity( sampleMap );
             assertEquals( Integer.parseInt( sampleMap.get( SubredditLogic.ID )[ 0 ] ), returnedAccount.getId() );
             assertEquals( sampleMap.get( SubredditLogic.NAME )[ 0 ], returnedAccount.getName());
-            assertEquals( sampleMap.get( SubredditLogic.SUBSCRIBERS )[ 0 ], returnedAccount.getSubscribers());
+            assertEquals( sampleMap.get( SubredditLogic.SUBSCRIBERS )[ 0 ], Integer.toString(returnedAccount.getSubscribers()));
             assertEquals( sampleMap.get( SubredditLogic.URL )[ 0 ], returnedAccount.getUrl());
         }
 
         @Test
         final void testGetColumnNames() {
             List<String> list = logic.getColumnNames();
-            assertEquals( Arrays.asList( "ID", "Displayname", "Username", "Password" ), list );
+            assertEquals(  Arrays.asList( "ID", "Name", "Url", "Subscribers"), list );
         }
 
         @Test
         final void testGetColumnCodes() {
             List<String> list = logic.getColumnCodes();
-            assertEquals( Arrays.asList( SubredditLogic.ID, SubredditLogic.NAME, SubredditLogic.SUBSCRIBERS, SubredditLogic.URL ), list );
+            assertEquals( Arrays.asList( SubredditLogic.ID, SubredditLogic.NAME, SubredditLogic.URL, SubredditLogic.SUBSCRIBERS), list );
         }
 
         @Test
@@ -318,7 +329,8 @@
             List<?> list = logic.extractDataAsList( expectedEntity );
             assertEquals( expectedEntity.getId(), list.get( 0 ) );
             assertEquals( expectedEntity.getName(), list.get( 1 ) );
-            assertEquals( expectedEntity.getSubscribers(), list.get( 2 ) );
-            assertEquals( expectedEntity.getUrl(), list.get( 3 ) );
+            assertEquals( expectedEntity.getUrl(), list.get( 2 ) );
+            assertEquals( expectedEntity.getSubscribers(), list.get( 3 ) );
+            
         }
     }
