@@ -6,6 +6,8 @@
     import entity.Comment;
     import entity.Post;
     import entity.RedditAccount;
+import java.time.Clock;
+import java.time.Instant;
     import java.util.Arrays;
     import java.util.Date;
     import java.util.HashMap;
@@ -32,6 +34,8 @@
     class CommentLogicTest {
 
         private CommentLogic logic;
+        private RedditAccountLogic rLogic;
+        private PostLogic pLogic;
         private Comment expectedEntity;
 
         @BeforeAll
@@ -48,24 +52,19 @@
         final void setUp() throws Exception {
 
             logic = LogicFactory.getFor( "Comment" );
-            /* **********************************
-             * ***********IMPORTANT**************
-             * **********************************/
-            //we only do this for the test.
-            //always create Entity using logic.
-            //we manually make the account to not rely on any logic functionality , just for testing
+            rLogic = LogicFactory.getFor("RedditAccount");
+            pLogic = LogicFactory.getFor("Subreddit");
+            String uniqueKey=Long.toString(new Date().getTime()).substring(0, 9);
             Comment entity = new Comment();
             entity.setId(99 );
             entity.setText("test");
-            entity.setCreated(new Date(11/11/11));
+            entity.setCreated(Date.from(Instant.now(Clock.systemDefaultZone())));
             entity.setIsReply(true );
             entity.setPoints(99);
             entity.setReplys(99);
-            entity.setUniqueId("1");
-      //      RedditCommentLogic red = new RedditCommentLogic();
-            entity.setRedditAccountId(new RedditAccount(1));
-     //      PostLogic post = new PostLogic();
-            entity.setPostId(new Post(1));
+            entity.setUniqueId(uniqueKey);
+            entity.setRedditAccountId(rLogic.getWithId(1));       
+            entity.setPostId(pLogic.getWithId(1));
 
             //get an instance of EntityManager
             EntityManager em = EMFactory.getEMF().createEntityManager();
@@ -330,13 +329,13 @@
         @Test
         final void testGetColumnNames() {
             List<String> list = logic.getColumnNames();
-            assertEquals( Arrays.asList( "ID", "Displayname", "Username", "Password" ), list );
+            assertEquals( Arrays.asList( "ID","Reddit_Account_ID","Post_ID","Unique_ID","Text","Points","Replys","Is_Reply","Created" ), list );
         }
 
         @Test
         final void testGetColumnCodes() {
             List<String> list = logic.getColumnCodes();
-            assertEquals( Arrays.asList( CommentLogic.ID, CommentLogic.CREATED, CommentLogic.POINTS, CommentLogic.REPLYS ), list );
+            assertEquals( Arrays.asList( CommentLogic.ID, CommentLogic.REDDIT_ACCOUNT_ID, CommentLogic.POST_ID, CommentLogic.UNIQUE_ID, CommentLogic.TEXT, CommentLogic.POINTS, CommentLogic.IS_REPLY, CommentLogic.CREATED ), list );
         }
 
         @Test
