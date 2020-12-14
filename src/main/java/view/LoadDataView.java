@@ -34,7 +34,9 @@ import reddit.wrapper.RedditWrapper;
 import reddit.wrapper.SubSort;
 
 /**
- *
+ * We make a little different flow because we think it is more reasonable. First , We try to get post data from the Reddit API.
+ * And then, we show the post list.
+ * If you want to save the post list, you can save the list by clicking 'ADD' or 'Add and View' button.
  * @author kw244
  */
 @WebServlet(name = "LoadDataView", urlPatterns = {"/LoadDataView"})

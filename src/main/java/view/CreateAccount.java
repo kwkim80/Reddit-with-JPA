@@ -132,7 +132,7 @@ public class CreateAccount extends HttpServlet {
         if( connectionCount < 3 ){
             connectionCount++;
             try {
-                TimeUnit.SECONDS.sleep( 60 );
+                TimeUnit.SECONDS.sleep( 1 );
             } catch( InterruptedException ex ) {
                 Logger.getLogger( CreateAccount.class.getName() ).log( Level.SEVERE, null, ex );
             }

@@ -36,6 +36,17 @@ public  class Utility {
        
     }
     
+    public static String getNowDate()  {
+        SimpleDateFormat formatter = new SimpleDateFormat( "yyyyMMdd" );
+
+        Date now = Date.from( Instant.now( Clock.systemDefaultZone() ) );
+        String strNow = formatter.format( now );
+        System.out.println( strNow );
+
+       return strNow;
+       
+    }
+    
     public static boolean IsDateEqual(Date d1, Date d2){
             long timeInMilliSeconds1 = d1.getTime();
             long timeInMilliSeconds2 = d2.getTime();

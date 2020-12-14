@@ -1,6 +1,7 @@
 package view;
 
 
+import common.Utility;
 import entity.Post;
 import entity.RedditAccount;
 import entity.Subreddit;
@@ -58,18 +59,15 @@ public class CreatePost extends HttpServlet {
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
             out.println( "<h2>Create Post</h2>" );
             out.println( "<form method=\"post\">" );
-            logic.getColumnNames().forEach((var column) -> {
+            logic.getColumnCodes().forEach((var column) -> {
                 if(!column.equalsIgnoreCase("ID")){
-               
+                    out.printf( "%s:<br>",column.substring(0,1).toUpperCase()+column.substring(1) );
                     if(column.equalsIgnoreCase("Created")){
-                          out.printf( "%s: (ex: 20201210)<br>",column );
-                    }else{
-                         out.printf( "%s:<br>",column );
-                    }
-                    out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", column );
+                          out.printf( "<input type=\"text\" name=\"%s\" value=\"\" placeholder='%s'><br>", column, Utility.getNowDate() );
+                    }else out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", column );
+
                     out.println( "<br>" );  
                 }
-             
             });
            
        

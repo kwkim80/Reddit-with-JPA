@@ -5,6 +5,7 @@
  */
 package view;
 
+import common.Utility;
 import entity.RedditAccount;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -55,30 +56,16 @@ public class CreateRedditAccount extends HttpServlet{
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
             out.println( "<h2>Create RedditAccount</h2>" );
             out.println( "<form method=\"post\">" );
-//            out.println( "Name:<br>" );
-//            //instead of typing the name of column manualy use the static vraiable in logic
-//            //use the same name as column id of the table. will use this name to get date
-//            //from parameter map.
-//            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", RedditAccountLogic.NAME );
-//            out.println( "<br>" );
-//            out.println( "Link Points:<br>" );
-//            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", RedditAccountLogic.LINK_POINTS);
-//            out.println( "<br>" );
-//            out.println( "Comment Points:<br>" );
-//            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>",RedditAccountLogic.COMMENT_POINTS );
-//            out.println( "<br>" );
-            logic.getColumnNames().forEach((var column) -> {
+
+            logic.getColumnCodes().forEach((var column) -> {
                 if(!column.equalsIgnoreCase("ID")){
-               
+                    out.printf( "%s:<br>",column.substring(0,1).toUpperCase()+column.substring(1) );
                     if(column.equalsIgnoreCase("Created")){
-                          out.printf( "%s: (ex: 20201210)<br>",column );
-                    }else{
-                         out.printf( "%s:<br>",column );
-                    }
-                    out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", column );
+                          out.printf( "<input type=\"text\" name=\"%s\" value=\"\" placeholder='%s'><br>", column, Utility.getNowDate() );
+                    }else out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", column );
+
                     out.println( "<br>" );  
                 }
-             
             });
            
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
@@ -151,7 +138,7 @@ public class CreateRedditAccount extends HttpServlet{
         if( connectionCount < 3 ){
             connectionCount++;
             try {
-                TimeUnit.SECONDS.sleep( 60 );
+                TimeUnit.SECONDS.sleep(1 );
             } catch( InterruptedException ex ) {
                 Logger.getLogger( CreateRedditAccount.class.getName() ).log( Level.SEVERE, null, ex );
             }
